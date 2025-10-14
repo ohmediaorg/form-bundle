@@ -39,6 +39,10 @@ class FormField
     #[ORM\Column(nullable: true)]
     private ?array $options = null;
 
+    #[ORM\ManyToOne(inversedBy: 'fields')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Form $form = null;
+
     public function __toString(): string
     {
         return (string) $this->label;
@@ -112,6 +116,18 @@ class FormField
     public function setOptions(?array $options): static
     {
         $this->options = $options;
+
+        return $this;
+    }
+
+    public function getForm(): ?Form
+    {
+        return $this->form;
+    }
+
+    public function setForm(?Form $form): static
+    {
+        $this->form = $form;
 
         return $this;
     }

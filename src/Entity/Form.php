@@ -2,6 +2,8 @@
 
 namespace OHMedia\FormBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use OHMedia\FormBundle\Repository\FormRepository;
@@ -37,6 +39,17 @@ class Form
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Assert\Length(max: 500)]
     private ?string $agreement_text = null;
+
+    /**
+     * @var Collection<int, FormField>
+     */
+    #[ORM\OneToMany(targetEntity: FormField::class, mappedBy: 'form', cascade: ['persist', 'remove'])]
+    private Collection $fields;
+
+    public function __construct()
+    {
+        $this->fields = new ArrayCollection();
+    }
 
     public function __toString(): string
     {
@@ -114,6 +127,36 @@ class Form
     public function setAgreementText(?string $agreement_text): static
     {
         $this->agreement_text = $agreement_text;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FormField>
+     */
+    public function getFields(): Collection
+    {
+        return $this->fields;
+    }
+
+    public function addField(FormField $field): static
+    {
+        if (!$this->fields->contains($field)) {
+            $this->fields->add($field);
+            $field->setForm($this);
+        }
+
+        return $this;
+    }
+
+    public function removeField(FormField $field): static
+    {
+        if ($this->fields->removeElement($field)) {
+            // set the owning side to null (unless already changed)
+            if ($field->getForm() === $this) {
+                $field->setForm(null);
+            }
+        }
 
         return $this;
     }
