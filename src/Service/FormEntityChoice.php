@@ -1,6 +1,6 @@
 <?php
 
-namespace OHMedia\FormBundle\Service\EntityChoice;
+namespace OHMedia\FormBundle\Service;
 
 use OHMedia\FormBundle\Entity\Form;
 use OHMedia\SecurityBundle\Service\EntityChoiceInterface;

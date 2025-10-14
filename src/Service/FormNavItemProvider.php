@@ -1,6 +1,6 @@
 <?php
 
-namespace OHMedia\FormBundle\Service\Backend\Nav;
+namespace OHMedia\FormBundle\Service;
 
 use OHMedia\BackendBundle\Service\AbstractNavItemProvider;
 use OHMedia\BootstrapBundle\Component\Nav\NavItemInterface;

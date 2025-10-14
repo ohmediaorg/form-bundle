@@ -50,7 +50,7 @@ class FormBackendController extends AbstractController
 
         $this->applySearch($searchForm, $qb);
 
-        return $this->render('@backend/form/form_index.html.twig', [
+        return $this->render('@OHMediaForm/form/form_index.html.twig', [
             'pagination' => $paginator->paginate($qb, 20),
             'new_form' => $newForm,
             'attributes' => $this->getAttributes(),
@@ -153,7 +153,7 @@ class FormBackendController extends AbstractController
             $this->addFlash('error', 'There are some errors in the form below.');
         }
 
-        return $this->render('@backend/form/form_create.html.twig', [
+        return $this->render('@OHMediaForm/form/form_create.html.twig', [
             'form' => $form->createView(),
             'form' => $form,
         ]);
@@ -169,7 +169,7 @@ class FormBackendController extends AbstractController
             'You cannot view this form.'
         );
 
-        return $this->render('@backend/form/form_view.html.twig', [
+        return $this->render('@OHMediaForm/form/form_view.html.twig', [
             'form' => $form,
             'attributes' => $this->getAttributes(),
         ]);
@@ -206,7 +206,7 @@ class FormBackendController extends AbstractController
             $this->addFlash('error', 'There are some errors in the form below.');
         }
 
-        return $this->render('@backend/form/form_edit.html.twig', [
+        return $this->render('@OHMediaForm/form/form_edit.html.twig', [
             'form' => $form->createView(),
             'form' => $form,
         ]);
@@ -241,7 +241,7 @@ class FormBackendController extends AbstractController
             $this->addFlash('error', 'There are some errors in the form below.');
         }
 
-        return $this->render('@backend/form/form_delete.html.twig', [
+        return $this->render('@OHMediaForm/form/form_delete.html.twig', [
             'form' => $form->createView(),
             'form' => $form,
         ]);
