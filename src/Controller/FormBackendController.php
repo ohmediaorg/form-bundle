@@ -208,7 +208,7 @@ class FormBackendController extends AbstractController
 
         return $this->render('@OHMediaForm/form/form_edit.html.twig', [
             'form' => $form->createView(),
-            'form' => $formEntity,
+            'form_entity' => $formEntity,
         ]);
     }
 
