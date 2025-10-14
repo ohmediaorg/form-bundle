@@ -9,6 +9,7 @@ use OHMedia\FormBundle\Entity\FormField;
 use OHMedia\FormBundle\Form\FormFieldType;
 use OHMedia\FormBundle\Repository\FormFieldRepository;
 use OHMedia\FormBundle\Security\Voter\FormFieldVoter;
+use OHMedia\FormBundle\Security\Voter\FormVoter;
 use OHMedia\UtilityBundle\Form\DeleteType;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,8 +36,8 @@ class FormFieldController extends AbstractController
         #[MapEntity(id: 'id')] Form $formEntity,
     ): Response {
         $this->denyAccessUnlessGranted(
-            FormFieldVoter::INDEX,
-            new FormField(),
+            FormVoter::VIEW,
+            $formEntity,
             'You cannot reorder the form fields.'
         );
 
