@@ -19,14 +19,3 @@ oh_media_form:
 ```
 
 Run `php bin/console make:migration` then run the subsequent migration.
-
-# Frontend
-
-Create `templates/bundles/OHMediaFormBundle/form.html.twig` which will have access
-to a `form` variable. The members can be looped on:
-
-```twig
-{% for member in form.members %}
-{{ dump(member) }}
-{% endfor %}
-```
