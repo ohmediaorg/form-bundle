@@ -7,6 +7,7 @@ use OHMedia\TimezoneBundle\Form\Type\DateTimeType;
 use OHMedia\UtilityBundle\Form\OneEmailPerLineType;
 use OHMedia\WysiwygBundle\Form\Type\WysiwygType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -21,6 +22,14 @@ class FormEntityType extends AbstractType
         $builder->add('description', WysiwygType::class);
 
         $builder->add('recipients', OneEmailPerLineType::class);
+
+        $builder->add('agreement_text', TextareaType::class, [
+            'required' => false,
+            'help' => 'If filled out, the user will be forced to agree to this text via checkbox in order to submit the form.',
+            'attr' => [
+                'rows' => 5,
+            ],
+        ]);
 
         $builder->add('published_at', DateTimeType::class, [
             'label' => 'Published Date/Time',

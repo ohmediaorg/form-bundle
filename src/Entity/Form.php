@@ -34,9 +34,13 @@ class Form
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Length(max: 500)]
+    private ?string $agreement_text = null;
+
     public function __toString(): string
     {
-        return 'Form #'.$this->id;
+        return (string) $this->name;
     }
 
     public function getId(): ?int
@@ -98,6 +102,18 @@ class Form
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getAgreementText(): ?string
+    {
+        return $this->agreement_text;
+    }
+
+    public function setAgreementText(?string $agreement_text): static
+    {
+        $this->agreement_text = $agreement_text;
 
         return $this;
     }
