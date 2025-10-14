@@ -1,0 +1,38 @@
+{% extends '@OHMediaBackend/base.html.twig' %}
+
+{% block meta_title %}{{ form }} | Forms{% endblock %}
+
+{% block breadcrumbs %}
+  {{ bootstrap_breadcrumbs(
+    bootstrap_breadcrumb(bootstrap_icon('ui-checks-grid') ~ ' Forms', 'form_index'),
+    bootstrap_breadcrumb(form),
+  ) }}
+{% endblock %}
+
+{% block actions %}
+  <div class="btn-group btn-group-sm">
+    {% if is_granted(attributes.edit, form) %}
+      <a class="btn btn-primary" href="{{ path('form_edit', {id: form.id}) }}">
+        {{ bootstrap_icon('pen-fill') }}
+        Edit
+      </a>
+    {% endif %}
+
+    {% if is_granted(attributes.delete, form) %}
+      <a class="btn btn-danger" href="{{ path('form_delete', {id: form.id}) }}" data-confirm="Are you sure you want to delete this form? Clicking OK will take you to a verification step to delete this entry.">
+        {{ bootstrap_icon('trash-fill') }}
+        Delete
+      </a>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block main %}
+  <div class="card">
+    <div class="card-body">
+      <h1 class="card-title">Form</h1>
+
+      {{ dump(form) }}
+    </div>
+  </div>
+{% endblock %}
