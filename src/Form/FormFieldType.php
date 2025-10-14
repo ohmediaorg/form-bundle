@@ -48,12 +48,13 @@ class FormFieldType extends AbstractType
 
         // TODO: form event to make this field required if type = choice
         $builder->add('choices', OnePerLineType::class, [
+            'label' => 'Selections',
             'required' => false,
             'mapped' => false,
         ]);
 
-        // TODO: form event to make this field required if type = choice
         $builder->add('multiple', ChoiceType::class, [
+            'label' => 'Allow multiple selections',
             'required' => false,
             'mapped' => false,
             'choices' => [
