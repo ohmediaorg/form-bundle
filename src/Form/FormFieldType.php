@@ -3,24 +3,12 @@
 namespace OHMedia\FormBundle\Form;
 
 use OHMedia\FormBundle\Entity\FormField;
-// use Doctrine\ORM\EntityRepository;
-// use Doctrine\ORM\QueryBuilder;
-// use OHMedia\FileBundle\Form\Type\FileEntityType;
-// use OHMedia\MetaBundle\Form\Type\MetaEntityType;
-// use OHMedia\TimezoneBundle\Form\Type\DateTimeType;
-// use OHMedia\WysiwygBundle\Form\Type\WysiwygType;
-// use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-// use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-// use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-// use Symfony\Component\Form\Extension\Core\Type\EmailType;
-// use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-// use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-// use Symfony\Component\Form\Extension\Core\Type\NumberType;
-// use Symfony\Component\Form\Extension\Core\Type\TelType;
-// use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-// use Symfony\Component\Form\Extension\Core\Type\TextType;
-// use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -30,67 +18,49 @@ class FormFieldType extends AbstractType
     {
         $formField = $options['data'];
 
-        // TIP: these all do the same thing
-        // $builder->add('name');
-        // $builder->add('name', null);
-        // $builder->add('name', TextType::class);
+        $builder->add('label');
 
-        // always use the file-bundle for files
-        // $builder->add('file', FileEntityType::class);
-        // $builder->add('image', FileEntityType::class, [
-        //     'image' => true,
-        // ]);
+        // TODO: make this true by default
+        $builder->add('required', ChoiceType::class, [
+            'choices' => [
+                'Yes' => true,
+                'No' => no,
+            ],
+        ]);
 
-        // <input type="datetime-local">
-        // always use the timezone-bundle to ensure timezones are good
-        // $builder->add('starts_at', DateTimeType::class, [
-        //     'widget' => 'single_text',
-        // ]);
-        // $builder->add('ends_at', DateTimeType::class, [
-        //     'widget' => 'single_text',
-        // ]);
+        $builder->add('type', ChoiceType::class, [
+            'choices' => [
+                'Text' => TextType::class,
+                'Number' => NumberType::class,
+                'Phone Number' => PhoneType::class,
+                'Email' => EmailType::class,
+                'Date' => DateType::class,
+                'Textarea' => TextareaType::class,
+                'Choice' => ChoiceType::class,
+            ],
+        ]);
 
-        // if you have a checkbox for a toggle, make sure it is not required
-        // $builder->add('is_featured', CheckboxType::class, [
-        //     'required' => false,
-        // ]);
+        $builder->add('help', TextType::class, [
+            'label' => 'Help Text',
+            'required' => false,
+            'help' => 'Shown below the form field.',
+        ]);
 
-        // <select>
-        // $builder->add('selection', ChoiceType::class);
+        // TODO: form event to make this field required if type = choice
+        $builder->add('choices', OnePerLineType::class, [
+            'required' => false,
+            'mapped' => false,
+        ]);
 
-        // <select multiple>
-        // $builder->add('selection', ChoiceType::class, [
-        //     'multiple' => true,
-        // ]);
-
-        // array of <input type="radio">
-        // $builder->add('selection', ChoiceType::class, [
-        //     'expanded' => true,
-        // ]);
-
-        // array of <input type="checkbox">
-        // $builder->add('selection', ChoiceType::class, [
-        //     'expanded' => true,
-        //     'multiple' => true,
-        // ]);
-
-        // <input type="url">
-        // $builder->add('url', UrlType::class, [
-        //     'default_protocol' => null,
-        // ]);
-
-        // TinyMCE
-        // $builder->add('content', WysiwygType::class);
-
-        // for a OneToOne or ManyToOne relationship selection
-        // $builder->add('owner', EntityType::class, [
-        //     'class' => User::class,
-        //     'query_builder' => function (EntityRepository $er): QueryBuilder {
-        //         return $er->createQueryBuilder('u')
-        //             ->orderBy('u.email', 'ASC');
-        //     },
-        //     'choice_label' => 'email',
-        // ]);
+        // TODO: form event to make this field required if type = choice
+        $builder->add('multiple', ChoiceType::class, [
+            'required' => false,
+            'mapped' => false,
+            'choices' => [
+                'Yes' => true,
+                'No' => no,
+            ],
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
