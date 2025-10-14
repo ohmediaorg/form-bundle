@@ -51,7 +51,9 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>Form</th>
+              <th>Name</th>
+              <th>Recipients</th>
+              <th>Shortcode</th>
               <th>Last Updated</th>
               <th></th>
             </tr>
@@ -70,6 +72,12 @@
                   {{ bootstrap_badge_secondary('Draft') }}
                 {% endif %}
               </td>
+              <td>
+                <small class="d-block">
+                  {{ form_entity.recipients|join("\n")|nl2br }}
+                </small>
+              </td>
+              <td>{{ shortcode('form_builder(' ~ form_entity.id ~ ')') }}</td>
               <td>{{ form_entity.updatedAt|datetime }}</td>
               <td>
                 {% if is_granted(attributes.form.view, form_entity) %}
