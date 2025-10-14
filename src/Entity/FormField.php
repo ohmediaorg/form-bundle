@@ -128,6 +128,36 @@ class FormField
         return $type === $this->type;
     }
 
+    public function isTypeText(): bool
+    {
+        return $this->isType(TextType::class);
+    }
+
+    public function isTypeNumber(): bool
+    {
+        return $this->isType(NumberType::class);
+    }
+
+    public function isTypePhone(): bool
+    {
+        return $this->isType(PhoneType::class);
+    }
+
+    public function isTypeEmail(): bool
+    {
+        return $this->isType(EmailType::class);
+    }
+
+    public function isTypeDate(): bool
+    {
+        return $this->isType(DateType::class);
+    }
+
+    public function isTypeTextarea(): bool
+    {
+        return $this->isType(TextareaType::class);
+    }
+
     public function isTypeChoice(): bool
     {
         return $this->isType(ChoiceType::class);
