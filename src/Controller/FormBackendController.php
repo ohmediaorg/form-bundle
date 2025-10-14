@@ -6,7 +6,7 @@ use Doctrine\ORM\QueryBuilder;
 use OHMedia\BackendBundle\Routing\Attribute\Admin;
 use OHMedia\BootstrapBundle\Service\Paginator;
 use OHMedia\FormBundle\Entity\Form;
-use OHMedia\FormBundle\Form\FormType;
+use OHMedia\FormBundle\Form\FormEntityType;
 use OHMedia\FormBundle\Repository\FormRepository;
 use OHMedia\FormBundle\Security\Voter\FormVoter;
 use OHMedia\TimezoneBundle\Util\DateTimeUtil;
@@ -133,7 +133,7 @@ class FormBackendController extends AbstractController
             'You cannot create a new form.'
         );
 
-        $form = $this->createForm(FormType::class, $form);
+        $form = $this->createForm(FormEntityType::class, $form);
 
         $form->add('save', SubmitType::class);
 
@@ -186,7 +186,7 @@ class FormBackendController extends AbstractController
             'You cannot edit this form.'
         );
 
-        $form = $this->createForm(FormType::class, $form);
+        $form = $this->createForm(FormEntityType::class, $form);
 
         $form->add('save', SubmitType::class);
 
