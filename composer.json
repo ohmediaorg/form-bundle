@@ -1,0 +1,25 @@
+{
+    "name": "ohmediaorg/form-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony FormBundle",
+    "keywords": ["Form"],
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Justin Hoffman",
+            "email": "justin@ohmedia.ca"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "symfony/framework-bundle": "6.4.*"
+    },
+    "autoload": {
+        "psr-4": { "OHMedia\\FormBundle\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "OHMedia\\FormBundle\\Tests\\": "tests/"
+        }
+    }
+}
