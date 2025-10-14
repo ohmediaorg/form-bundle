@@ -1,6 +1,6 @@
 <?php
 
-namespace OHMedia\FormBundle\Controller;
+namespace OHMedia\FormBundle\Controller\Backend;
 
 use Doctrine\ORM\QueryBuilder;
 use OHMedia\BackendBundle\Routing\Attribute\Admin;

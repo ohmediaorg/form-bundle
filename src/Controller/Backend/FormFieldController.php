@@ -4,6 +4,7 @@ namespace OHMedia\FormBundle\Controller\Backend;
 
 use Doctrine\DBAL\Connection;
 use OHMedia\BackendBundle\Routing\Attribute\Admin;
+use OHMedia\FormBundle\Entity\Form;
 use OHMedia\FormBundle\Entity\FormField;
 use OHMedia\FormBundle\Form\FormFieldType;
 use OHMedia\FormBundle\Repository\FormFieldRepository;
@@ -26,9 +27,10 @@ class FormFieldController extends AbstractController
 
     private const CSRF_TOKEN_REORDER = 'form_field_reorder';
 
-    #[Route('/form-fields', name: 'form_field_index', methods: ['GET'])]
-    public function index(): Response
-    {
+    #[Route('/form/{id}/fields', name: 'form_field_index', methods: ['GET'])]
+    public function index(
+        #[MapEntity(id: 'id')] Form $formEntity,
+    ): Response {
         $newFormField = new FormField();
 
         $this->denyAccessUnlessGranted(
@@ -50,10 +52,11 @@ class FormFieldController extends AbstractController
         ]);
     }
 
-    #[Route('/form-fields/reorder', name: 'form_field_reorder_post', methods: ['POST'])]
+    #[Route('/form/{id}/fields/reorder', name: 'form_field_reorder_post', methods: ['POST'])]
     public function reorderPost(
         Connection $connection,
         Request $request,
+        #[MapEntity(id: 'id')] Form $formEntity,
     ): Response {
         $this->denyAccessUnlessGranted(
             FormFieldVoter::INDEX,
@@ -92,10 +95,13 @@ class FormFieldController extends AbstractController
         return new JsonResponse();
     }
 
-    #[Route('/form-field/create', name: 'form_field_create', methods: ['GET', 'POST'])]
-    public function create(Request $request): Response
-    {
+    #[Route('/form/{id}/field/create', name: 'form_field_create', methods: ['GET', 'POST'])]
+    public function create(
+        Request $request,
+        #[MapEntity(id: 'id')] Form $formEntity,
+    ): Response {
         $formField = new FormField();
+        $formField->setForm($formEntity);
 
         $this->denyAccessUnlessGranted(
             FormFieldVoter::CREATE,
@@ -127,7 +133,7 @@ class FormFieldController extends AbstractController
         ]);
     }
 
-    #[Route('/form-field/{id}/edit', name: 'form_field_edit', methods: ['GET', 'POST'])]
+    #[Route('/form/field/{id}/edit', name: 'form_field_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
         #[MapEntity(id: 'id')] FormField $formField,
@@ -162,7 +168,7 @@ class FormFieldController extends AbstractController
         ]);
     }
 
-    #[Route('/form-field/{id}/delete', name: 'form_field_delete', methods: ['GET', 'POST'])]
+    #[Route('/form/field/{id}/delete', name: 'form_field_delete', methods: ['GET', 'POST'])]
     public function delete(
         Request $request,
         #[MapEntity(id: 'id')] FormField $formField,
