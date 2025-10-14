@@ -5,7 +5,7 @@
 {% block breadcrumbs %}
   {{ bootstrap_breadcrumbs(
     bootstrap_breadcrumb(bootstrap_icon('ui-checks-grid') ~ ' Forms', 'form_index'),
-    bootstrap_breadcrumb(form, 'form_view', {id: form.id}),
+    bootstrap_breadcrumb(form_entity, 'form_view', {id: form_entity.id}),
     bootstrap_breadcrumb('Edit'),
   ) }}
 {% endblock %}

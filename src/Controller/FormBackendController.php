@@ -125,15 +125,15 @@ class FormBackendController extends AbstractController
     #[Route('/form/create', name: 'form_create', methods: ['GET', 'POST'])]
     public function create(Request $request): Response
     {
-        $form = new Form();
+        $formEntity = new Form();
 
         $this->denyAccessUnlessGranted(
             FormVoter::CREATE,
-            $form,
+            $formEntity,
             'You cannot create a new form.'
         );
 
-        $form = $this->createForm(FormEntityType::class, $form);
+        $form = $this->createForm(FormEntityType::class, $formEntity);
 
         $form->add('save', SubmitType::class);
 
@@ -141,12 +141,12 @@ class FormBackendController extends AbstractController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $this->formRepository->save($form, true);
+                $this->formRepository->save($formEntity, true);
 
                 $this->addFlash('notice', 'The form was created successfully.');
 
                 return $this->redirectToRoute('form_view', [
-                    'id' => $form->getId(),
+                    'id' => $formEntity->getId(),
                 ]);
             }
 
@@ -155,22 +155,22 @@ class FormBackendController extends AbstractController
 
         return $this->render('@OHMediaForm/form/form_create.html.twig', [
             'form' => $form->createView(),
-            'form' => $form,
+            'form_entity' => $formEntity,
         ]);
     }
 
     #[Route('/form/{id}', name: 'form_view', methods: ['GET'])]
     public function view(
-        #[MapEntity(id: 'id')] Form $form,
+        #[MapEntity(id: 'id')] Form $formEntity,
     ): Response {
         $this->denyAccessUnlessGranted(
             FormVoter::VIEW,
-            $form,
+            $formEntity,
             'You cannot view this form.'
         );
 
         return $this->render('@OHMediaForm/form/form_view.html.twig', [
-            'form' => $form,
+            'form_entity' => $formEntity,
             'attributes' => $this->getAttributes(),
         ]);
     }
@@ -178,15 +178,15 @@ class FormBackendController extends AbstractController
     #[Route('/form/{id}/edit', name: 'form_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
-        #[MapEntity(id: 'id')] Form $form,
+        #[MapEntity(id: 'id')] Form $formEntity,
     ): Response {
         $this->denyAccessUnlessGranted(
             FormVoter::EDIT,
-            $form,
+            $formEntity,
             'You cannot edit this form.'
         );
 
-        $form = $this->createForm(FormEntityType::class, $form);
+        $form = $this->createForm(FormEntityType::class, $formEntity);
 
         $form->add('save', SubmitType::class);
 
@@ -194,7 +194,7 @@ class FormBackendController extends AbstractController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $this->formRepository->save($form, true);
+                $this->formRepository->save($formEntity, true);
 
                 $this->addFlash('notice', 'The form was updated successfully.');
 
@@ -208,18 +208,18 @@ class FormBackendController extends AbstractController
 
         return $this->render('@OHMediaForm/form/form_edit.html.twig', [
             'form' => $form->createView(),
-            'form' => $form,
+            'form' => $formEntity,
         ]);
     }
 
     #[Route('/form/{id}/delete', name: 'form_delete', methods: ['GET', 'POST'])]
     public function delete(
         Request $request,
-        #[MapEntity(id: 'id')] Form $form,
+        #[MapEntity(id: 'id')] Form $formEntity,
     ): Response {
         $this->denyAccessUnlessGranted(
             FormVoter::DELETE,
-            $form,
+            $formEntity,
             'You cannot delete this form.'
         );
 
@@ -231,7 +231,7 @@ class FormBackendController extends AbstractController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $this->formRepository->remove($form, true);
+                $this->formRepository->remove($formEntity, true);
 
                 $this->addFlash('notice', 'The form was deleted successfully.');
 
@@ -243,7 +243,7 @@ class FormBackendController extends AbstractController
 
         return $this->render('@OHMediaForm/form/form_delete.html.twig', [
             'form' => $form->createView(),
-            'form' => $form,
+            'form_entity' => $formEntity,
         ]);
     }
 
