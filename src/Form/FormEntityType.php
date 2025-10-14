@@ -8,6 +8,7 @@ use OHMedia\UtilityBundle\Form\OneEmailPerLineType;
 use OHMedia\WysiwygBundle\Form\Type\WysiwygType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -26,6 +27,23 @@ class FormEntityType extends AbstractType
         $builder->add('agreement_text', TextareaType::class, [
             'required' => false,
             'help' => 'If filled out, the user will be forced to agree to this text via checkbox in order to submit the form.',
+            'attr' => [
+                'rows' => 5,
+            ],
+        ]);
+
+        $builder->add('success_message', TextareaType::class, [
+            'label' => 'Success Message',
+            'help' => 'This message is shown to the user on the website after the form is submitted.',
+        ]);
+
+        $builder->add('subject', TextType::class, [
+            'label' => 'Email Subject',
+        ]);
+
+        $builder->add('email_message', TextareaType::class, [
+            'label' => 'Email Message',
+            'help' => 'If an email is sent to the user, this message will be included in that email.',
             'attr' => [
                 'rows' => 5,
             ],

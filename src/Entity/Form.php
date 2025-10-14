@@ -46,6 +46,21 @@ class Form
     #[ORM\OneToMany(targetEntity: FormField::class, mappedBy: 'form', cascade: ['persist', 'remove'])]
     private Collection $fields;
 
+    #[ORM\Column(length: 50)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 50)]
+    private ?string $subject = null;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
+    private ?string $success_message = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 500)]
+    private ?string $email_message = null;
+
     public function __construct()
     {
         $this->fields = new ArrayCollection();
@@ -157,6 +172,42 @@ class Form
                 $field->setForm(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSubject(): ?string
+    {
+        return $this->subject;
+    }
+
+    public function setSubject(string $subject): static
+    {
+        $this->subject = $subject;
+
+        return $this;
+    }
+
+    public function getSuccessMessage(): ?string
+    {
+        return $this->success_message;
+    }
+
+    public function setSuccessMessage(string $success_message): static
+    {
+        $this->success_message = $success_message;
+
+        return $this;
+    }
+
+    public function getEmailMessage(): ?string
+    {
+        return $this->email_message;
+    }
+
+    public function setEmailMessage(string $email_message): static
+    {
+        $this->email_message = $email_message;
 
         return $this;
     }
