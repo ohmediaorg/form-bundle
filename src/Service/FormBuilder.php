@@ -4,6 +4,8 @@ namespace OHMedia\FormBundle\Service;
 
 use OHMedia\AntispamBundle\Form\Type\CaptchaType;
 use OHMedia\AntispamBundle\Validator\Constraints\NoForeignCharacters;
+use OHMedia\FormBundle\Entity\Form;
+use OHMedia\FormBundle\Entity\FormField;
 use OHMedia\UtilityBundle\Validator\Phone;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -49,13 +51,14 @@ class FormBuilder
     ): void {
         $name = $field->getName();
         $label = $field->getLabel();
+        $required = $field->isRequired();
 
         $constraints = [
             new Assert\NoSuspiciousCharacters(),
             new NoForeignCharacters(),
         ];
 
-        if ($field->getRequired()) {
+        if ($required) {
             $constraints[] = new Assert\NotBlank([
                 'message' => "$label: should not be blank.",
             ]);
@@ -87,7 +90,7 @@ class FormBuilder
 
         $options = [
             'label' => $label,
-            'required' => $field->getRequired(),
+            'required' => $required,
             'help' => $field->getHelp(),
             'constraints' => $constraints,
         ];
@@ -101,6 +104,8 @@ class FormBuilder
             );
 
             $options['multiple'] = $fieldOptions['multiple'];
+
+            $options['expanded'] = count($fieldOptions['choices']) < 5;
         }
 
         $builder->add($name, $field->getType(), $options);

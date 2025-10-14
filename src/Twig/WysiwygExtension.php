@@ -3,6 +3,7 @@
 namespace OHMedia\FormBundle\Twig;
 
 use OHMedia\FormBundle\Repository\FormRepository;
+use OHMedia\FormBundle\Service\FormBuilder;
 use OHMedia\WysiwygBundle\Twig\AbstractWysiwygExtension;
 use Twig\Environment;
 use Twig\TwigFunction;
@@ -13,6 +14,7 @@ class WysiwygExtension extends AbstractWysiwygExtension
 
     public function __construct(
         private FormRepository $formRepository,
+        private FormBuilder $formBuilder,
     ) {
     }
 
@@ -47,10 +49,10 @@ class WysiwygExtension extends AbstractWysiwygExtension
             return '';
         }
 
-        $form = $formBuilder->buildForm($formEntity);
+        $form = $this->formBuilder->buildForm($formEntity);
 
         return $twig->render('@OHMediaForm/form_builder.html.twig', [
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 }
