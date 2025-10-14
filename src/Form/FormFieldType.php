@@ -3,6 +3,7 @@
 namespace OHMedia\FormBundle\Form;
 
 use OHMedia\FormBundle\Entity\FormField;
+use OHMedia\UtilityBundle\Form\OnePerLineType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -24,7 +25,11 @@ class FormFieldType extends AbstractType
         $builder->add('required', ChoiceType::class, [
             'choices' => [
                 'Yes' => true,
-                'No' => no,
+                'No' => false,
+            ],
+            'expanded' => true,
+            'row_attr' => [
+                'class' => 'fieldset-nostyle mb-3',
             ],
         ]);
 
@@ -48,18 +53,19 @@ class FormFieldType extends AbstractType
 
         // TODO: form event to make this field required if type = choice
         $builder->add('choices', OnePerLineType::class, [
-            'label' => 'Selections',
-            'required' => false,
             'mapped' => false,
         ]);
 
         $builder->add('multiple', ChoiceType::class, [
-            'label' => 'Allow multiple selections',
-            'required' => false,
+            'label' => 'Allow multiple choices',
             'mapped' => false,
             'choices' => [
                 'Yes' => true,
-                'No' => no,
+                'No' => false,
+            ],
+            'expanded' => true,
+            'row_attr' => [
+                'class' => 'fieldset-nostyle mb-3',
             ],
         ]);
     }

@@ -6,6 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use OHMedia\FormBundle\Repository\FormFieldRepository;
 use OHMedia\UtilityBundle\Entity\BlameableEntityTrait;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -42,6 +43,9 @@ class FormField
     #[ORM\ManyToOne(inversedBy: 'fields')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Form $form = null;
+
+    #[ORM\Column]
+    private ?bool $required = true;
 
     public function __toString(): string
     {
@@ -96,6 +100,21 @@ class FormField
         return $this;
     }
 
+    public function isType(string $type): bool
+    {
+        return $type === $this->type;
+    }
+
+    public function isTypeChoice(): bool
+    {
+        return $this->isType(ChoiceType::class);
+    }
+
+    public function getTypeChoice(): string
+    {
+        return ChoiceType::class;
+    }
+
     public function getHelp(): ?string
     {
         return $this->help;
@@ -128,6 +147,18 @@ class FormField
     public function setForm(?Form $form): static
     {
         $this->form = $form;
+
+        return $this;
+    }
+
+    public function isRequired(): ?bool
+    {
+        return $this->required;
+    }
+
+    public function setRequired(bool $required): static
+    {
+        $this->required = $required;
 
         return $this;
     }

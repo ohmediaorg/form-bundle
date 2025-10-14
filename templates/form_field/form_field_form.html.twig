@@ -1,0 +1,37 @@
+{% extends '@OHMediaBackend/form.html.twig' %}
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const typeChoice = {{ form_field.typeChoice|js }};
+
+  const type = document.getElementById('{{ form.type.vars.id }}');
+
+  const form = type.form;
+
+  const choices = document.getElementById('{{ form.choices.vars.id }}');
+
+  const multiple = form.elements['{{ form.multiple.vars.full_name }}'];
+
+  console.dir(multiple[0]);
+
+  const multipleContainer = document.getElementById('{{ form.multiple.vars.id }}');
+
+  function onTypeChange() {console.log(typeChoice, type.value);
+    const isTypeChoice = typeChoice === type.value;
+
+    choices.parentNode.style.display = isTypeChoice ? '' : 'none';
+    choices.required = isTypeChoice;
+
+    multipleContainer.parentNode.style.display = isTypeChoice ? '' : 'none';
+    multiple.forEach((radio) => {
+      radio.required = isTypeChoice;
+    });
+  }
+
+  type.addEventListener('change', onTypeChange);
+
+  onTypeChange();
+});
+</script>
+{% endblock %}

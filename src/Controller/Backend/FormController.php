@@ -6,8 +6,10 @@ use Doctrine\ORM\QueryBuilder;
 use OHMedia\BackendBundle\Routing\Attribute\Admin;
 use OHMedia\BootstrapBundle\Service\Paginator;
 use OHMedia\FormBundle\Entity\Form;
+use OHMedia\FormBundle\Entity\FormField;
 use OHMedia\FormBundle\Form\FormEntityType;
 use OHMedia\FormBundle\Repository\FormRepository;
+use OHMedia\FormBundle\Security\Voter\FormFieldVoter;
 use OHMedia\FormBundle\Security\Voter\FormVoter;
 use OHMedia\TimezoneBundle\Util\DateTimeUtil;
 use OHMedia\UtilityBundle\Form\DeleteType;
@@ -23,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Admin]
-class FormBackendController extends AbstractController
+class FormController extends AbstractController
 {
     public function __construct(private FormRepository $formRepository)
     {
@@ -171,7 +173,9 @@ class FormBackendController extends AbstractController
 
         return $this->render('@OHMediaForm/form/form_view.html.twig', [
             'form_entity' => $formEntity,
+            'new_form_field' => (new FormField())->setForm($formEntity),
             'attributes' => $this->getAttributes(),
+            'csrf_token_name' => FormFieldController::CSRF_TOKEN_REORDER,
         ]);
     }
 
@@ -247,13 +251,20 @@ class FormBackendController extends AbstractController
         ]);
     }
 
-    private function getAttributes(): array
+    public static function getAttributes(): array
     {
         return [
-            'view' => FormVoter::VIEW,
-            'create' => FormVoter::CREATE,
-            'delete' => FormVoter::DELETE,
-            'edit' => FormVoter::EDIT,
+            'form' => [
+                'view' => FormVoter::VIEW,
+                'create' => FormVoter::CREATE,
+                'delete' => FormVoter::DELETE,
+                'edit' => FormVoter::EDIT,
+            ],
+            'form_field' => [
+                'create' => FormFieldVoter::CREATE,
+                'delete' => FormFieldVoter::DELETE,
+                'edit' => FormFieldVoter::EDIT,
+            ],
         ];
     }
 }

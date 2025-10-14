@@ -13,6 +13,7 @@ use OHMedia\UtilityBundle\Form\DeleteType;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,32 +26,7 @@ class FormFieldController extends AbstractController
     {
     }
 
-    private const CSRF_TOKEN_REORDER = 'form_field_reorder';
-
-    #[Route('/form/{id}/fields', name: 'form_field_index', methods: ['GET'])]
-    public function index(
-        #[MapEntity(id: 'id')] Form $formEntity,
-    ): Response {
-        $newFormField = new FormField();
-
-        $this->denyAccessUnlessGranted(
-            FormFieldVoter::INDEX,
-            $newFormField,
-            'You cannot access the list of form fields.'
-        );
-
-        $formFields = $this->formFieldRepository->createQueryBuilder('ff')
-            ->orderBy('ff.ordinal', 'asc')
-            ->getQuery()
-            ->getResult();
-
-        return $this->render('@OHMediaForm/form_field/form_field_index.html.twig', [
-            'form_fields' => $formFields,
-            'new_form_field' => $newFormField,
-            'attributes' => $this->getAttributes(),
-            'csrf_token_name' => self::CSRF_TOKEN_REORDER,
-        ]);
-    }
+    public const CSRF_TOKEN_REORDER = 'form_field_reorder';
 
     #[Route('/form/{id}/fields/reorder', name: 'form_field_reorder_post', methods: ['POST'])]
     public function reorderPost(
@@ -117,11 +93,13 @@ class FormFieldController extends AbstractController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                $this->preSave($form, $formField);
+
                 $this->formFieldRepository->save($formField, true);
 
                 $this->addFlash('notice', 'The form field was created successfully.');
 
-                return $this->redirectToRoute('form_field_index');
+                return $this->redirectToForm($formField);
             }
 
             $this->addFlash('error', 'There are some errors in the form below.');
@@ -152,11 +130,13 @@ class FormFieldController extends AbstractController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                $this->preSave($form, $formField);
+
                 $this->formFieldRepository->save($formField, true);
 
                 $this->addFlash('notice', 'The form field was updated successfully.');
 
-                return $this->redirectToRoute('form_field_index');
+                return $this->redirectToForm($formField);
             }
 
             $this->addFlash('error', 'There are some errors in the form below.');
@@ -166,6 +146,20 @@ class FormFieldController extends AbstractController
             'form' => $form->createView(),
             'form_field' => $formField,
         ]);
+    }
+
+    private function preSave(FormInterface $form, FormField $formField): void
+    {
+        if (ChoiceType::class === $formField->getType()) {
+            $options = [
+                'choices' => $form->get('choices')->getData(),
+                'multiple' => $form->get('multiple')->getData(),
+            ];
+
+            $formField->setOptions($options);
+        } else {
+            $formField->setOptions(null);
+        }
     }
 
     #[Route('/form/field/{id}/delete', name: 'form_field_delete', methods: ['GET', 'POST'])]
@@ -191,7 +185,7 @@ class FormFieldController extends AbstractController
 
                 $this->addFlash('notice', 'The form field was deleted successfully.');
 
-                return $this->redirectToRoute('form_field_index');
+                return $this->redirectToForm($formField);
             }
 
             $this->addFlash('error', 'There are some errors in the form below.');
@@ -200,6 +194,13 @@ class FormFieldController extends AbstractController
         return $this->render('@OHMediaForm/form_field/form_field_delete.html.twig', [
             'form' => $form->createView(),
             'form_field' => $formField,
+        ]);
+    }
+
+    private function redirectToForm(FormField $formField): Response
+    {
+        return $this->redirectToRoute('form_view', [
+            'id' => $formField->getForm()->getId(),
         ]);
     }
 

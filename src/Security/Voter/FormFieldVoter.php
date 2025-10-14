@@ -8,7 +8,6 @@ use OHMedia\SecurityBundle\Security\Voter\AbstractEntityVoter;
 
 class FormFieldVoter extends AbstractEntityVoter
 {
-    public const INDEX = 'index';
     public const CREATE = 'create';
     public const EDIT = 'edit';
     public const DELETE = 'delete';
@@ -16,7 +15,6 @@ class FormFieldVoter extends AbstractEntityVoter
     protected function getAttributes(): array
     {
         return [
-            self::INDEX,
             self::CREATE,
             self::EDIT,
             self::DELETE,
@@ -26,11 +24,6 @@ class FormFieldVoter extends AbstractEntityVoter
     protected function getEntityClass(): string
     {
         return FormField::class;
-    }
-
-    protected function canIndex(FormField $formField, User $loggedIn): bool
-    {
-        return true;
     }
 
     protected function canCreate(FormField $formField, User $loggedIn): bool

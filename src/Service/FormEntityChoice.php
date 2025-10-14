@@ -3,6 +3,7 @@
 namespace OHMedia\FormBundle\Service;
 
 use OHMedia\FormBundle\Entity\Form;
+use OHMedia\FormBundle\Entity\FormField;
 use OHMedia\SecurityBundle\Service\EntityChoiceInterface;
 
 class FormEntityChoice implements EntityChoiceInterface
@@ -14,6 +15,9 @@ class FormEntityChoice implements EntityChoiceInterface
 
     public function getEntities(): array
     {
-        return [Form::class];
+        return [
+            Form::class,
+            FormField::class,
+        ];
     }
 }
