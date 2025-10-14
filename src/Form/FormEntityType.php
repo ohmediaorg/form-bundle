@@ -25,6 +25,7 @@ class FormEntityType extends AbstractType
         $builder->add('recipients', OneEmailPerLineType::class);
 
         $builder->add('agreement_text', TextareaType::class, [
+            'label' => 'Agreement Text',
             'required' => false,
             'help' => 'If filled out, the user will be forced to agree to this text via checkbox in order to submit the form.',
             'attr' => [
