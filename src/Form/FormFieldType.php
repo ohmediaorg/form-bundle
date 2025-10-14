@@ -41,6 +41,10 @@ class FormFieldType extends AbstractType
 
         $options = $formField->getOptions();
 
+        // TODO: for type=email, add checkboxes for
+        // - send copy to this email
+        // - use this email as the Reply-To header
+
         // TODO: form event to make this field required if type = choice
         $builder->add('choices', OnePerLineType::class, [
             'mapped' => false,

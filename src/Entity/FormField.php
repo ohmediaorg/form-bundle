@@ -180,6 +180,7 @@ class FormField
         return $this;
     }
 
+    // TODO: rename this to $data
     public function getOptions(): ?array
     {
         return $this->options;
