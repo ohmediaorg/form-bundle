@@ -203,7 +203,7 @@ class FormController extends AbstractController
                 $this->addFlash('notice', 'The form was updated successfully.');
 
                 return $this->redirectToRoute('form_view', [
-                    'id' => $form->getId(),
+                    'id' => $formEntity->getId(),
                 ]);
             }
 
