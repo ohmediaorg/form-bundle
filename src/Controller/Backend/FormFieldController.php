@@ -150,7 +150,7 @@ class FormFieldController extends AbstractController
 
     private function preSave(FormInterface $form, FormField $formField): void
     {
-        if (ChoiceType::class === $formField->getType()) {
+        if ($formField->isTypeChoice()) {
             $options = [
                 'choices' => $form->get('choices')->getData(),
                 'multiple' => $form->get('multiple')->getData(),

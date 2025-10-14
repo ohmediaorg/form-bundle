@@ -42,14 +42,22 @@
 {% block main %}
   <div class="card">
     <div class="card-body">
-      <h1 class="card-title">Form</h1>
+      <div class="card-title card-title-with-count">
+        <h1 class="card-title-heading">Fields</h1>
+        <div class="card-title-count">
+          <span class="badge text-bg-primary">{{ form_field_count }}</span>
+        </div>
+      </div>
+      <h2 class="card-subtitle mb-3 text-body-secondary h5">{{ form_entity }}</h2>
 
       {% if form_field_count %}
         <table class="table table-striped">
           <thead>
             <tr>
               <th style="width:1rem">&nbsp;</th>
-              <th>Form Field</th>
+              <th style="max-width:300px">Label</th>
+              <th>Required</th>
+              <th>Type</th>
               <th>Last Updated</th>
               <th></th>
             </tr>
@@ -63,7 +71,20 @@
           {% for form_field in form_entity.fields %}
             <tr data-id="{{ form_field.id }}">
               <td data-handle>{{ bootstrap_icon('arrows-move') }}</td>
-              <td>{{ form_field }}</td>
+              <td>
+                {{ form_field }}
+                {% if form_field.help %}
+                  <small class="d-block text-muted">{{ form_field.help }}</small>
+                {% endif %}
+              </td>
+              <td>
+                {% if form_field.required %}
+                  <span class="badge text-bg-success">Yes</span>
+                {% else %}
+                  <span class="badge text-bg-secondary">No</span>
+                {% endif %}
+              </td>
+              <td>{{ form_field.typeReadable }}</td>
               <td>{{ form_field.updatedAt|datetime }}</td>
               <td>
                 {% if is_granted(attributes.form_field.edit, form_field) %}

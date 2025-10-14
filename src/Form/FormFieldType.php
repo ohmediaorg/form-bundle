@@ -6,9 +6,6 @@ use OHMedia\FormBundle\Entity\FormField;
 use OHMedia\UtilityBundle\Form\OnePerLineType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,7 +18,6 @@ class FormFieldType extends AbstractType
 
         $builder->add('label');
 
-        // TODO: make this true by default
         $builder->add('required', ChoiceType::class, [
             'choices' => [
                 'Yes' => true,
@@ -34,15 +30,7 @@ class FormFieldType extends AbstractType
         ]);
 
         $builder->add('type', ChoiceType::class, [
-            'choices' => [
-                'Text' => TextType::class,
-                'Number' => NumberType::class,
-                'Phone Number' => PhoneType::class,
-                'Email' => EmailType::class,
-                'Date' => DateType::class,
-                'Textarea' => TextareaType::class,
-                'Choice' => ChoiceType::class,
-            ],
+            'choices' => FormField::TYPE_CHOICES,
         ]);
 
         $builder->add('help', TextType::class, [
@@ -51,9 +39,12 @@ class FormFieldType extends AbstractType
             'help' => 'Shown below the form field.',
         ]);
 
+        $options = $formField->getOptions();
+
         // TODO: form event to make this field required if type = choice
         $builder->add('choices', OnePerLineType::class, [
             'mapped' => false,
+            'data' => $options['choices'] ?? null,
         ]);
 
         $builder->add('multiple', ChoiceType::class, [
@@ -67,6 +58,7 @@ class FormFieldType extends AbstractType
             'row_attr' => [
                 'class' => 'fieldset-nostyle mb-3',
             ],
+            'data' => $options['multiple'] ?? null,
         ]);
     }
 

@@ -6,7 +6,13 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use OHMedia\FormBundle\Repository\FormFieldRepository;
 use OHMedia\UtilityBundle\Entity\BlameableEntityTrait;
+use OHMedia\UtilityBundle\Form\PhoneType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -14,6 +20,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 class FormField
 {
     use BlameableEntityTrait;
+
+    public const TYPE_CHOICES = [
+        'Text' => TextType::class,
+        'Number' => NumberType::class,
+        'Phone Number' => PhoneType::class,
+        'Email' => EmailType::class,
+        'Date' => DateType::class,
+        'Textarea' => TextareaType::class,
+        'Choice' => ChoiceType::class,
+    ];
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -100,6 +116,13 @@ class FormField
         return $this;
     }
 
+    public function getTypeReadable(): string
+    {
+        $types = array_flip(self::TYPE_CHOICES);
+
+        return $types[$this->type] ?? $this->type;
+    }
+
     public function isType(string $type): bool
     {
         return $type === $this->type;
@@ -112,7 +135,7 @@ class FormField
 
     public function getTypeChoice(): string
     {
-        return ChoiceType::class;
+        return self::TYPE_CHOICES['Choice'];
     }
 
     public function getHelp(): ?string
