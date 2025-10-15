@@ -33,15 +33,7 @@ class FormBuilder
         }
 
         if ($agreementText = $formEntity->getAgreementText()) {
-            $builder->add('agreement', CheckboxType::class, [
-                'label' => $agreementText,
-                'constraints' => [
-                    new Assert\IsTrue([
-                        // TODO: determine the wording here
-                        'message' => 'You must agree to the agreement by checking the checkbox.',
-                    ]),
-                ],
-            ]);
+            $this->addAgreementField($builder, $agreementText);
         }
 
         $builder->add('captcha', CaptchaType::class);
@@ -49,6 +41,26 @@ class FormBuilder
         $builder->add('submit', SubmitType::class);
 
         return $builder->getForm();
+    }
+
+    private function addAgreementField(
+        FormBuilderInterface $builder,
+        string $label,
+    ): void {
+        $truncate = 25;
+
+        $truncated = strlen($label) > $truncate
+            ? substr($label, 0, $truncate).'...'
+            : $label;
+
+        $builder->add('agreement', CheckboxType::class, [
+            'label' => $label,
+            'constraints' => [
+                new Assert\IsTrue([
+                    'message' => "You must agree to \"$truncated\".",
+                ]),
+            ],
+        ]);
     }
 
     private function addField(
