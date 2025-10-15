@@ -6,10 +6,17 @@ use OHMedia\AntispamBundle\Form\Type\CaptchaType;
 use OHMedia\AntispamBundle\Validator\Constraints\NoForeignCharacters;
 use OHMedia\FormBundle\Entity\Form;
 use OHMedia\FormBundle\Entity\FormField;
+use OHMedia\UtilityBundle\Form\PhoneType;
 use OHMedia\UtilityBundle\Validator\Phone;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -67,67 +74,47 @@ class FormBuilder
         FormBuilderInterface $builder,
         FormField $field,
     ): void {
-        $name = $field->getName();
-        $label = $field->getLabel();
-        $required = $field->isRequired();
+        if ($field->isTypeChoice()) {
+            $type = ChoiceType::class;
+        } elseif ($field->isTypeDate()) {
+            $type = DateType::class;
+        } elseif ($field->isTypeEmail()) {
+            $type = EmailType::class;
+        } elseif ($field->isTypeNumber()) {
+            $type = NumberType::class;
+        } elseif ($field->isTypePhone()) {
+            $type = PhoneType::class;
+        } elseif ($field->isTypeTextarea()) {
+            $type = TextareaType::class;
+        } else {
+            $type = TextType::class;
+        }
 
-        $constraints = [];
+        $builder->add($field->getName(), $type, $this->getFieldOptions($field));
+    }
+
+    private function getFieldOptions(FormField $field): array
+    {
+        $label = $field->getLabel();
 
         $attr = [];
 
-        $isString = $field->isTypeText()
-            || $field->isTypeEmail()
-            || $field->isTypePhone()
-            || $field->isTypeTextarea();
+        $maxlength = $this->getFieldMaxlength($field);
 
-        if ($isString) {
-            $constraints[] = new Assert\NoSuspiciousCharacters();
-
-            $constraints[] = new NoForeignCharacters();
+        if ($maxlength) {
+            $attr['maxlength'] = $maxlength;
         }
 
-        if ($required) {
-            $constraints[] = new Assert\NotBlank([
-                'message' => "\"$label\" should not be blank.",
-            ]);
-        }
-
-        $maxLength = null;
-
-        if ($field->isTypeText()) {
-            $maxLength = 100;
-        } elseif ($field->isTypeEmail()) {
-            $maxLength = 180;
-
-            $constraints[] = new Assert\Email(
-                null,
-                "\"$label\" is not a valid email address.",
-            );
-        } elseif ($field->isTypePhone()) {
-            $constraints[] = new Phone(
-                null,
-                "\"$label\" does not match the suggested format.",
-            );
-        } elseif ($field->isTypeTextarea()) {
-            $maxLength = 1000;
-        }
-
-        if ($maxLength) {
-            $constraints[] = new Assert\Length([
-                'max' => $maxLength,
-                'maxMessage' => "\"$label\" should be {{ limit }} characters or less.",
-            ]);
-
-            $attr['maxlength'] = $maxLength;
-        }
+        $constraints = $this->getFieldConstraints($field, $maxlength);
 
         $options = [
             'label' => $label,
-            'required' => $required,
+            'required' => $field->isRequired(),
             'constraints' => $constraints,
             'attr' => $attr,
         ];
 
+        // OHMedia\UtilityBundle\Form\PhoneType has its own help text
         if (!$field->isTypePhone()) {
             $options['help'] = nl2br(htmlspecialchars($field->getHelp()));
             $options['help_html'] = true;
@@ -150,6 +137,78 @@ class FormBuilder
             $options['invalid_message'] = "\"$label\" is not a valid number.";
         }
 
-        $builder->add($name, $field->getType(), $options);
+        return $options;
+    }
+
+    private function getFieldConstraints(FormField $field, ?int $maxlength): array
+    {
+        $label = $field->getLabel();
+
+        $constraints = [];
+
+        $isString = $field->isTypeText()
+            || $field->isTypeEmail()
+            || $field->isTypePhone()
+            || $field->isTypeTextarea();
+
+        // requires a string value to compare
+        if ($isString) {
+            $constraints[] = new Assert\NoSuspiciousCharacters(
+                null,
+                "\"$label\" contains characters that are not allowed by the current restriction-level.",
+                "\"$label\" contains invisible characters which is not allowed.",
+                "\"$label\" is mixing numbers from different scripts which is not allowed.",
+                "\"$label\" contains hidden overlay characters which is not allowed.",
+            );
+
+            $constraints[] = new NoForeignCharacters(
+                "\"$label\" contains foreign characters that are not allowed.",
+            );
+        }
+
+        if ($field->isRequired()) {
+            $constraints[] = new Assert\NotBlank([
+                'message' => "\"$label\" should not be blank.",
+            ]);
+        }
+
+        if ($field->isTypePhone()) {
+            $constraints[] = new Phone(
+                null,
+                "\"$label\" does not match the suggested format.",
+            );
+        } elseif ($field->isTypeEmail()) {
+            $constraints[] = new Assert\Email(
+                null,
+                "\"$label\" is not a valid email address.",
+            );
+        }
+
+        if ($maxlength) {
+            $constraints[] = new Assert\Length([
+                'max' => $maxlength,
+                'maxMessage' => "\"$label\" should be {{ limit }} characters or less.",
+            ]);
+        }
+
+        return $constraints;
+    }
+
+    private function getFieldMaxlength(FormField $field): ?int
+    {
+        $maxlength = null;
+
+        // length doesn't apply to Choice, Date, or Number
+        // Phone has regex
+
+        if ($field->isTypeText()) {
+            $maxlength = 100;
+        } elseif ($field->isTypeEmail()) {
+            $maxlength = 180;
+        } elseif ($field->isTypeTextarea()) {
+            $maxlength = 1000;
+        }
+
+        return $maxlength;
     }
 }
