@@ -76,7 +76,6 @@ class FormBuilder
         $attr = [];
 
         $isString = $field->isTypeText()
-            || $field->isTypeNumber()
             || $field->isTypeEmail()
             || $field->isTypePhone()
             || $field->isTypeTextarea();

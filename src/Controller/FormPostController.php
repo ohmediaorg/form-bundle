@@ -65,7 +65,7 @@ class FormPostController extends AbstractController
         try {
             $to = [];
 
-            foreach ($recipients as $recipients) {
+            foreach ($recipients as $recipient) {
                 $to[] = new EmailAddress($recipient);
             }
 
@@ -75,13 +75,15 @@ class FormPostController extends AbstractController
 
             // TODO: dynamic data array with labels
 
+            $subject = $formEntity->getSubject();
+
             $email = (new Email())
-                ->setSubject($formEntity->getSubject())
+                ->setSubject($subject)
                 ->setTemplate('@OHMediaForm/email/form_email.html.twig', [
                     'data' => $formData,
                     'subject' => $subject,
                 ])
-                ->setTo($to)
+                ->setTo(...$to)
                 // ->setReplyTo($replyTo)
             ;
 
