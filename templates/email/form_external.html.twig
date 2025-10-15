@@ -1,0 +1,21 @@
+{% extends '@OHMediaEmail/base.html.twig' %}
+
+{% block content %}
+  <p>Hello,</p>
+
+  <p>{{ form_entity.emailMessage|nl2br }}</p>
+
+  <p>Here is a copy of your submission:</p>
+
+  {% for label, value in form_data %}
+    <p><b>{{ label }}:</b> {{ value|raw }}</p>
+  {% endfor %}
+
+  {% if form_entity.agreementText %}
+    <p>
+      <b>Agreed to the following:</b>
+      <br>
+      {{ form_entity.agreementText|nl2br }}
+    </p>
+  {% endif %}
+{% endblock %}
