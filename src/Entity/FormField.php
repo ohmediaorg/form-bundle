@@ -153,7 +153,7 @@ class FormField
 
     public function isTypeDate(): bool
     {
-        return $this->isType(self::TYPE_Date);
+        return $this->isType(self::TYPE_DATE);
     }
 
     public function isTypeTextarea(): bool
