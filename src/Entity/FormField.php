@@ -39,9 +39,9 @@ class FormField
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $ordinal = 9999;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 50)]
     #[Assert\NotBlank]
-    #[Assert\Length(max: 100)]
+    #[Assert\Length(max: 50)]
     private ?string $label = null;
 
     #[ORM\Column(length: 100)]
