@@ -33,7 +33,7 @@ class FormFieldType extends AbstractType
         ]);
 
         $builder->add('type', ChoiceType::class, [
-            'choices' => FormField::TYPE_CHOICES,
+            'choices' => FormField::getTypeChoices(),
         ]);
 
         // TODO: hide for type=phone

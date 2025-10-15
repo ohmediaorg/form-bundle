@@ -6,13 +6,6 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use OHMedia\FormBundle\Repository\FormFieldRepository;
 use OHMedia\UtilityBundle\Entity\BlameableEntityTrait;
-use OHMedia\UtilityBundle\Form\PhoneType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -21,15 +14,13 @@ class FormField
 {
     use BlameableEntityTrait;
 
-    public const TYPE_CHOICES = [
-        'Text' => TextType::class,
-        'Number' => NumberType::class,
-        'Phone Number' => PhoneType::class,
-        'Email' => EmailType::class,
-        'Date' => DateType::class,
-        'Textarea' => TextareaType::class,
-        'Choice' => ChoiceType::class,
-    ];
+    public const TYPE_CHOICE = 'choice';
+    public const TYPE_DATE = 'date';
+    public const TYPE_EMAIL = 'email';
+    public const TYPE_NUMBER = 'number';
+    public const TYPE_PHONE = 'phone';
+    public const TYPE_TEXT = 'text';
+    public const TYPE_TEXTAREA = 'textarea';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -44,9 +35,8 @@ class FormField
     #[Assert\Length(max: 50)]
     private ?string $label = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 10)]
     #[Assert\NotBlank]
-    #[Assert\Length(max: 100)]
     private ?string $type = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -116,9 +106,22 @@ class FormField
         return $this;
     }
 
+    public static function getTypeChoices(): array
+    {
+        return [
+            'Text' => self::TYPE_TEXT,
+            'Email' => self::TYPE_EMAIL,
+            'Phone Number' => self::TYPE_PHONE,
+            'Textarea' => self::TYPE_TEXTAREA,
+            'Choice' => self::TYPE_CHOICE,
+            'Date' => self::TYPE_DATE,
+            'Number' => self::TYPE_NUMBER,
+        ];
+    }
+
     public function getTypeReadable(): string
     {
-        $types = array_flip(self::TYPE_CHOICES);
+        $types = array_flip(self::getTypeChoices());
 
         return $types[$this->type] ?? $this->type;
     }
@@ -130,42 +133,37 @@ class FormField
 
     public function isTypeText(): bool
     {
-        return $this->isType(TextType::class);
+        return $this->isType(self::TYPE_TEXT);
     }
 
     public function isTypeNumber(): bool
     {
-        return $this->isType(NumberType::class);
+        return $this->isType(self::TYPE_NUMBER);
     }
 
     public function isTypePhone(): bool
     {
-        return $this->isType(PhoneType::class);
+        return $this->isType(self::TYPE_PHONE);
     }
 
     public function isTypeEmail(): bool
     {
-        return $this->isType(EmailType::class);
+        return $this->isType(self::TYPE_EMAIL);
     }
 
     public function isTypeDate(): bool
     {
-        return $this->isType(DateType::class);
+        return $this->isType(self::TYPE_Date);
     }
 
     public function isTypeTextarea(): bool
     {
-        return $this->isType(TextareaType::class);
+        return $this->isType(self::TYPE_TEXTAREA);
     }
 
     public function isTypeChoice(): bool
     {
-        return $this->isType(ChoiceType::class);
-    }
-
-    public function getTypeChoice(): string
-    {
-        return self::TYPE_CHOICES['Choice'];
+        return $this->isType(self::TYPE_CHOICE);
     }
 
     public function getHelp(): ?string
