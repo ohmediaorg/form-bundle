@@ -37,7 +37,8 @@ class FormBuilder
                 'label' => $agreementText,
                 'constraints' => [
                     new Assert\IsTrue([
-                        'message' => 'You must check off the agreement.',
+                        // TODO: determine the wording here
+                        'message' => 'You must agree to the agreement by checking the checkbox.',
                     ]),
                 ],
             ]);
@@ -133,6 +134,8 @@ class FormBuilder
             $options['expanded'] = count($fieldOptions['choices']) < 5;
         } elseif ($field->isTypeDate()) {
             $options['widget'] = 'single_text';
+        } elseif ($field->isTypeNumber()) {
+            $options['invalid_message'] = "\"$label\" is not a valid number.";
         }
 
         $builder->add($name, $field->getType(), $options);
