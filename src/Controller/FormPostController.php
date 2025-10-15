@@ -58,8 +58,6 @@ class FormPostController extends AbstractController
             ]);
         }
 
-        $formData = $form->getData();
-
         $recipients = $formEntity->getRecipients();
 
         try {
@@ -69,22 +67,52 @@ class FormPostController extends AbstractController
                 $to[] = new EmailAddress($recipient);
             }
 
-            // $replyTo = new EmailAddress($formData['email']);
+            $replyTo = [];
+            $copy = [];
+
+            $formData = [];
+
+            foreach ($formEntity->getFields() as $field) {
+                $name = $field->getName();
+                $label = $field->getLabel();
+                $value = $form->get($name)->getData();
+
+                if ($value instanceof \DateTimeInterface) {
+                    $formData[$label] = $value->format('M j, Y');
+                } elseif (is_array($value)) {
+                    $formData[$label] = htmlspecialchars(implode(', ', $value));
+                } elseif ($field->isTypeTextarea()) {
+                    $formData[$label] = nl2br(htmlspecialchars($value));
+                } else {
+                    $formData[$label] = htmlspecialchars($value);
+                }
+
+                if ($field->isTypeEmail()) {
+                    $fieldData = $field->getData();
+
+                    if ($fieldData['copy']) {
+                        $copy[] = new EmailAddress($value);
+                    }
+
+                    if ($fieldData['reply']) {
+                        $replyTo[] = new EmailAddress($value);
+                    }
+                }
+            }
 
             // TODO: internal vs external emails
-
-            // TODO: dynamic data array with labels
 
             $subject = $formEntity->getSubject();
 
             $email = (new Email())
                 ->setSubject($subject)
                 ->setTemplate('@OHMediaForm/email/form_email.html.twig', [
-                    'data' => $formData,
+                    'form_entity' => $formEntity,
+                    'form_data' => $formData,
                     'subject' => $subject,
                 ])
                 ->setTo(...$to)
-                // ->setReplyTo($replyTo)
+                ->setReplyTo(...$replyTo)
             ;
 
             $emailRepository->save($email, true);

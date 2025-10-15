@@ -44,10 +44,6 @@ class FormFieldType extends AbstractType
 
         $data = $formField->getData();
 
-        // TODO: for type=email, add checkboxes for
-        // - send copy to this email
-        // - use this email as the Reply-To header
-
         // TODO: form event to make this field required if type = choice
         $builder->add('choices', OnePerLineType::class, [
             'mapped' => false,
@@ -66,6 +62,34 @@ class FormFieldType extends AbstractType
                 'class' => 'fieldset-nostyle mb-3',
             ],
             'data' => $data['multiple'] ?? null,
+        ]);
+
+        $builder->add('copy', ChoiceType::class, [
+            'label' => 'Should a copy of the submission be sent to the email address entered into this field?',
+            'mapped' => false,
+            'choices' => [
+                'Yes' => true,
+                'No' => false,
+            ],
+            'expanded' => true,
+            'row_attr' => [
+                'class' => 'fieldset-nostyle mb-3',
+            ],
+            'data' => $data['copy'] ?? null,
+        ]);
+
+        $builder->add('reply', ChoiceType::class, [
+            'label' => 'Should the internal email be set to reply to the email address entered into this field?',
+            'mapped' => false,
+            'choices' => [
+                'Yes' => true,
+                'No' => false,
+            ],
+            'expanded' => true,
+            'row_attr' => [
+                'class' => 'fieldset-nostyle mb-3',
+            ],
+            'data' => $data['reply'] ?? null,
         ]);
     }
 

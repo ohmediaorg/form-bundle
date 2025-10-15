@@ -152,14 +152,21 @@ class FormFieldController extends AbstractController
     private function preSave(FormInterface $form, FormField $formField): void
     {
         if ($formField->isTypeChoice()) {
-            $options = [
+            $data = [
                 'choices' => $form->get('choices')->getData(),
                 'multiple' => $form->get('multiple')->getData(),
             ];
 
-            $formField->setOptions($options);
+            $formField->setData($data);
+        } elseif ($formField->isTypeEmail()) {
+            $data = [
+                'copy' => $form->get('copy')->getData(),
+                'reply' => $form->get('reply')->getData(),
+            ];
+
+            $formField->setData($data);
         } else {
-            $formField->setOptions(null);
+            $formField->setData(null);
         }
     }
 
