@@ -33,6 +33,7 @@ class FormFieldType extends AbstractType
             'choices' => FormField::TYPE_CHOICES,
         ]);
 
+        // TODO: hide for type=phone
         $builder->add('help', TextType::class, [
             'label' => 'Help Text',
             'required' => false,

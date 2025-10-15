@@ -35,6 +35,11 @@ class FormBuilder
         if ($agreementText = $formEntity->getAgreementText()) {
             $builder->add('agreement', CheckboxType::class, [
                 'label' => $agreementText,
+                'constraints' => [
+                    new Assert\IsTrue([
+                        'message' => 'You must check off the agreement.',
+                    ]),
+                ],
             ]);
         }
 
@@ -54,6 +59,8 @@ class FormBuilder
         $required = $field->isRequired();
 
         $constraints = [];
+
+        $attr = [];
 
         $isString = $field->isTypeText()
             || $field->isTypeNumber()
@@ -82,10 +89,13 @@ class FormBuilder
 
             $constraints[] = new Assert\Email(
                 null,
-                "\"$label\" is not a valid email address."
+                "\"$label\" is not a valid email address.",
             );
         } elseif ($field->isTypePhone()) {
-            $constraints[] = new Phone();
+            $constraints[] = new Phone(
+                null,
+                "\"$label\" does not match the suggested format.",
+            );
         } elseif ($field->isTypeTextarea()) {
             $maxLength = 1000;
         }
@@ -95,14 +105,20 @@ class FormBuilder
                 'max' => $maxLength,
                 'maxMessage' => "\"$label\" should be {{ limit }} characters or less.",
             ]);
+
+            $attr['maxlength'] = $maxLength;
         }
 
         $options = [
             'label' => $label,
             'required' => $required,
-            'help' => $field->getHelp(),
             'constraints' => $constraints,
+            'attr' => $attr,
         ];
+
+        if (!$field->isTypePhone()) {
+            $options['help'] = $field->getHelp();
+        }
 
         if ($field->isTypeChoice()) {
             $fieldOptions = $field->getOptions();
@@ -115,6 +131,8 @@ class FormBuilder
             $options['multiple'] = $fieldOptions['multiple'];
 
             $options['expanded'] = count($fieldOptions['choices']) < 5;
+        } elseif ($field->isTypeDate()) {
+            $options['widget'] = 'single_text';
         }
 
         $builder->add($name, $field->getType(), $options);
