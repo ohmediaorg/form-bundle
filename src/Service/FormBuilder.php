@@ -121,16 +121,16 @@ class FormBuilder
         }
 
         if ($field->isTypeChoice()) {
-            $fieldOptions = $field->getOptions();
+            $data = $field->getData();
 
             $options['choices'] = array_combine(
-                $fieldOptions['choices'],
-                $fieldOptions['choices'],
+                $data['choices'],
+                $data['choices'],
             );
 
-            $options['multiple'] = $fieldOptions['multiple'];
+            $options['multiple'] = $data['multiple'];
 
-            $options['expanded'] = count($fieldOptions['choices']) < 5;
+            $options['expanded'] = count($data['choices']) < 5;
         } elseif ($field->isTypeDate()) {
             $options['widget'] = 'single_text';
         } elseif ($field->isTypeNumber()) {

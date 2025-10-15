@@ -42,7 +42,7 @@ class FormFieldType extends AbstractType
             'help' => 'Shown below the form field. Use this to provide more instruction that does not fit in the label.',
         ]);
 
-        $options = $formField->getOptions();
+        $data = $formField->getData();
 
         // TODO: for type=email, add checkboxes for
         // - send copy to this email
@@ -51,7 +51,7 @@ class FormFieldType extends AbstractType
         // TODO: form event to make this field required if type = choice
         $builder->add('choices', OnePerLineType::class, [
             'mapped' => false,
-            'data' => $options['choices'] ?? null,
+            'data' => $data['choices'] ?? null,
         ]);
 
         $builder->add('multiple', ChoiceType::class, [
@@ -65,7 +65,7 @@ class FormFieldType extends AbstractType
             'row_attr' => [
                 'class' => 'fieldset-nostyle mb-3',
             ],
-            'data' => $options['multiple'] ?? null,
+            'data' => $data['multiple'] ?? null,
         ]);
     }
 

@@ -44,7 +44,7 @@ class FormField
     private ?string $help = null;
 
     #[ORM\Column(nullable: true)]
-    private ?array $options = null;
+    private ?array $data = null;
 
     #[ORM\ManyToOne(inversedBy: 'fields')]
     #[ORM\JoinColumn(nullable: false)]
@@ -178,15 +178,14 @@ class FormField
         return $this;
     }
 
-    // TODO: rename this to $data
-    public function getOptions(): ?array
+    public function getData(): ?array
     {
-        return $this->options;
+        return $this->data;
     }
 
-    public function setOptions(?array $options): static
+    public function setData(?array $data): static
     {
-        $this->options = $options;
+        $this->data = $data;
 
         return $this;
     }
