@@ -6,6 +6,7 @@ use OHMedia\FormBundle\Entity\FormField;
 use OHMedia\UtilityBundle\Form\OnePerLineType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,7 +17,9 @@ class FormFieldType extends AbstractType
     {
         $formField = $options['data'];
 
-        $builder->add('label');
+        $builder->add('label', TextType::class, [
+            'help' => 'Keep this as short and descriptive as possible.',
+        ]);
 
         $builder->add('required', ChoiceType::class, [
             'choices' => [
@@ -34,10 +37,10 @@ class FormFieldType extends AbstractType
         ]);
 
         // TODO: hide for type=phone
-        $builder->add('help', TextType::class, [
+        $builder->add('help', TextareaType::class, [
             'label' => 'Help Text',
             'required' => false,
-            'help' => 'Shown below the form field.',
+            'help' => 'Shown below the form field. Use this to provide more instruction that does not fit in the label.',
         ]);
 
         $options = $formField->getOptions();
