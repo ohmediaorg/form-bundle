@@ -6,10 +6,13 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const typeChoice = "{{ constant(form_field_fqns ~ '::TYPE_CHOICE') }}";
+  const typePhone = "{{ constant(form_field_fqns ~ '::TYPE_PHONE') }}";
 
   const type = document.getElementById('{{ form.type.vars.id }}');
 
   const form = type.form;
+
+  const help = document.getElementById('{{ form.help.vars.id }}');
 
   const choices = document.getElementById('{{ form.choices.vars.id }}');
 
@@ -21,6 +24,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function onTypeChange() {console.log(typeChoice, type.value);
     const isTypeChoice = typeChoice === type.value;
+    const isTypePhone = typePhone === type.value;
+
+    help.parentNode.style.display = isTypePhone ? 'none' : '';
 
     choices.parentNode.style.display = isTypeChoice ? '' : 'none';
     choices.required = isTypeChoice;
