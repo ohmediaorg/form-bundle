@@ -95,9 +95,18 @@ class FormController extends AbstractController
         $search = $form->get('search')->getData();
 
         if ($search) {
+            $qb->leftJoin('f.fields', 'ff');
+
             $searchFields = [
-                // TODO: put your search fields here
-                'f.created_by',
+                'f.name',
+                'f.description',
+                'f.recipients',
+                'f.agreement_text',
+                'f.subject',
+                'f.success_message',
+                'f.email_message',
+                'ff.label',
+                'ff.help',
             ];
 
             $searchLikes = [];
