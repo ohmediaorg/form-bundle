@@ -129,7 +129,8 @@ class FormBuilder
         ];
 
         if (!$field->isTypePhone()) {
-            $options['help'] = $field->getHelp();
+            $options['help'] = nl2br(htmlspecialchars($field->getHelp()));
+            $options['help_html'] = true;
         }
 
         if ($field->isTypeChoice()) {
