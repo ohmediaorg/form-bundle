@@ -1,0 +1,9 @@
+{% extends '@OHMediaEmail/base.html.twig' %}
+
+{% block content %}
+<p>Hello,</p>
+
+<p>Someone submitted the form with the following information:</p>
+
+{{ data|json_encode|raw }}
+{% endblock %}

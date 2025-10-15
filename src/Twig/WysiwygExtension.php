@@ -5,6 +5,7 @@ namespace OHMedia\FormBundle\Twig;
 use OHMedia\FormBundle\Repository\FormRepository;
 use OHMedia\FormBundle\Service\FormBuilder;
 use OHMedia\WysiwygBundle\Twig\AbstractWysiwygExtension;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Twig\Environment;
 use Twig\TwigFunction;
 
@@ -15,6 +16,8 @@ class WysiwygExtension extends AbstractWysiwygExtension
     public function __construct(
         private FormRepository $formRepository,
         private FormBuilder $formBuilder,
+        #[Autowire('%oh_media_antispam.captcha.sitekey%')]
+        private string $captchaSitekey
     ) {
     }
 
@@ -53,6 +56,8 @@ class WysiwygExtension extends AbstractWysiwygExtension
 
         return $twig->render('@OHMediaForm/form_builder.html.twig', [
             'form' => $form->createView(),
+            'form_entity' => $formEntity,
+            'captcha_sitekey' => $this->captchaSitekey,
         ]);
     }
 }

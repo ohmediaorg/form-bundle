@@ -5,7 +5,9 @@ namespace OHMedia\FormBundle\Controller;
 use OHMedia\EmailBundle\Entity\Email;
 use OHMedia\EmailBundle\Repository\EmailRepository;
 use OHMedia\EmailBundle\Util\EmailAddress;
+use OHMedia\FormBundle\Entity\Form;
 use OHMedia\FormBundle\Service\FormBuilder;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,7 +21,7 @@ class FormPostController extends AbstractController
         FormBuilder $formBuilder,
         EmailRepository $emailRepository,
         Request $request,
-        // TODO: Form $formEntity mapped
+        #[MapEntity(id: 'id')] Form $formEntity,
     ) {
         $form = $formBuilder->buildForm($formEntity);
 
@@ -68,6 +70,10 @@ class FormPostController extends AbstractController
             }
 
             // $replyTo = new EmailAddress($formData['email']);
+
+            // TODO: internal vs external emails
+
+            // TODO: dynamic data array with labels
 
             $email = (new Email())
                 ->setSubject($formEntity->getSubject())

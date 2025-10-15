@@ -53,14 +53,23 @@ class FormBuilder
         $label = $field->getLabel();
         $required = $field->isRequired();
 
-        $constraints = [
-            new Assert\NoSuspiciousCharacters(),
-            new NoForeignCharacters(),
-        ];
+        $constraints = [];
+
+        $isString = $field->isTypeText()
+            || $field->isTypeNumber()
+            || $field->isTypeEmail()
+            || $field->isTypePhone()
+            || $field->isTypeTextarea();
+
+        if ($isString) {
+            $constraints[] = new Assert\NoSuspiciousCharacters();
+
+            $constraints[] = new NoForeignCharacters();
+        }
 
         if ($required) {
             $constraints[] = new Assert\NotBlank([
-                'message' => "$label: should not be blank.",
+                'message' => "\"$label\" should not be blank.",
             ]);
         }
 
@@ -73,18 +82,18 @@ class FormBuilder
 
             $constraints[] = new Assert\Email(
                 null,
-                "$label: is not a valid email address."
+                "\"$label\" is not a valid email address."
             );
         } elseif ($field->isTypePhone()) {
             $constraints[] = new Phone();
-        } elseif ($field->isTypeText()) {
+        } elseif ($field->isTypeTextarea()) {
             $maxLength = 1000;
         }
 
         if ($maxLength) {
             $constraints[] = new Assert\Length([
                 'max' => $maxLength,
-                'maxMessage' => "$label: should be {{ limit }} characters or less.",
+                'maxMessage' => "\"$label\" should be {{ limit }} characters or less.",
             ]);
         }
 

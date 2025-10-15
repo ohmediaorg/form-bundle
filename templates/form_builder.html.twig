@@ -1,1 +1,97 @@
-{{ form(form) }}
+{% set form_id = 'form_' ~ uniq() %}
+
+<div id="{{ form_id }}_success" class="alert alert-success" style="display:none">
+  {{ form_entity.successMessage|nl2br }}
+</div>
+
+{% do form.captcha.setRendered %}
+
+{{ form_start(form, {
+  attr: {
+    id: form_id
+  }
+}) }}
+  {{ form_rest(form) }}
+
+  <div id="{{ form_id }}_captcha_container" class="mb-3"></div>
+  <input type="hidden" id="{{ form_id }}_captcha_input" name="{{ form.captcha.vars.full_name }}" />
+
+  <div id="{{ form_id }}_error" class="alert alert-danger" style="display:none"></div>
+{{ form_end(form) }}
+
+<script>
+document.addEventListener('DOMContentLoaded', async function() {
+  const form = document.getElementById('{{ form_id }}');
+
+  const success = document.getElementById('{{ form_id }}_success');
+  const error = document.getElementById('{{ form_id }}_error');
+
+  const captchaContainer = document.getElementById('{{ form_id }}_captcha_container');
+  const captchaInput = document.getElementById('{{ form_id }}_captcha_input');
+
+  const parameters = {
+    sitekey: {{ captcha_sitekey|js }},
+    theme: {{ form.captcha.vars.theme|js }},
+    size: {{ form.captcha.vars.size|js }},
+  };
+
+  const captcha = await OHMEDIA_ANTISPAM_CAPTCHA_PROMISE(captchaContainer, parameters);
+
+  const submitButton = form.querySelector('[type=submit]');
+
+  let submitting = false;
+
+  function submitForm() {
+    if (submitting) {
+      return;
+    }
+
+    submitting = true;
+    success.style.display = 'none';
+    error.style.display = 'none';
+    submitButton.textContent = 'Submitting...';
+    submitButton.disabled = true;
+
+    const formData = new FormData(form);
+
+    fetch("{{ path('form_post', {id: form_entity.id}) }}", {
+      method: 'post',
+      body: formData,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    })
+      .then(r => r.json())
+      .then((r) => {
+        if (r.success) {
+          success.style.display = '';
+          form.reset();
+          form.style.display = 'none';
+        } else {
+          error.innerHTML = r.errors.join('<br>');
+          error.style.display = '';
+        }
+      })
+      .catch((e) => {
+        error.textContent = 'Something unexpected happened.';
+        error.style.display = '';
+      })
+      .finally(() => {
+        submitting = false;
+        submitButton.textContent = 'Submit';
+        submitButton.disabled = false;
+        captcha.reset();
+      });
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    captchaInput.value = captcha.getResponse();
+
+    submitForm();
+
+    return false;
+  });
+});
+</script>
