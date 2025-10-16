@@ -58,7 +58,8 @@ class FormBuilder
             : $label;
 
         $builder->add('agreement', CheckboxType::class, [
-            'label' => $label,
+            'label' => nl2br(htmlspecialchars($label)),
+            'label_html' => true,
             'constraints' => [
                 new Assert\IsTrue([
                     'message' => "You must agree to \"$truncated\".",
