@@ -46,7 +46,7 @@ class FormController extends AbstractController
 
         $qb = $this->formRepository->createQueryBuilder('f');
         $qb->orderBy('CASE WHEN f.published_at IS NULL THEN 0 ELSE 1 END', 'ASC');
-        $qb->addOrderBy('f.published_at', 'DESC');
+        $qb->addOrderBy('f.name', 'ASC');
 
         $searchForm = $this->getSearchForm($request);
 
