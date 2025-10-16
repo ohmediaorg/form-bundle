@@ -225,6 +225,46 @@ class FormController extends AbstractController
         ]);
     }
 
+    #[Route('/form/{id}/duplicate', name: 'form_duplicate', methods: ['GET', 'POST'])]
+    public function duplicate(
+        Request $request,
+        #[MapEntity(id: 'id')] Form $existingFormEntity,
+    ): Response {
+        $this->denyAccessUnlessGranted(
+            FormVoter::DUPLICATE,
+            $existingFormEntity,
+            'You cannot duplicate this form.'
+        );
+
+        $newFormEntity = clone $existingFormEntity;
+
+        $form = $this->createForm(FormEntityType::class, $newFormEntity);
+
+        $form->add('save', SubmitType::class);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $this->formRepository->save($newFormEntity, true);
+
+                $this->addFlash('notice', 'The form was duplicated successfully.');
+
+                return $this->redirectToRoute('form_view', [
+                    'id' => $newFormEntity->getId(),
+                ]);
+            }
+
+            $this->addFlash('error', 'There are some errors in the form below.');
+        }
+
+        return $this->render('@OHMediaForm/form/form_duplicate.html.twig', [
+            'form' => $form->createView(),
+            'existing_form_entity' => $existingFormEntity,
+            'form_entity' => $newFormEntity,
+        ]);
+    }
+
     #[Route('/form/{id}/delete', name: 'form_delete', methods: ['GET', 'POST'])]
     public function delete(
         Request $request,
@@ -268,6 +308,7 @@ class FormController extends AbstractController
                 'create' => FormVoter::CREATE,
                 'delete' => FormVoter::DELETE,
                 'edit' => FormVoter::EDIT,
+                'duplicate' => FormVoter::DUPLICATE,
             ],
             'form_field' => [
                 'create' => FormFieldVoter::CREATE,

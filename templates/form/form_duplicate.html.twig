@@ -1,0 +1,11 @@
+{% extends '@OHMediaBackend/form.html.twig' %}
+
+{% set form_title = 'Duplicate Form' %}
+
+{% block breadcrumbs %}
+  {{ bootstrap_breadcrumbs(
+    bootstrap_breadcrumb(bootstrap_icon('ui-checks-grid') ~ ' Forms', 'form_index'),
+    bootstrap_breadcrumb(existing_form_entity, 'form_view', {id: existing_form_entity.id}),
+    bootstrap_breadcrumb('Duplicate'),
+  ) }}
+{% endblock %}

@@ -13,6 +13,7 @@ class FormVoter extends AbstractEntityVoter
     public const CREATE = 'create';
     public const VIEW = 'view';
     public const EDIT = 'edit';
+    public const DUPLICATE = 'duplicate';
     public const DELETE = 'delete';
 
     public function __construct(private Wysiwyg $wysiwyg)
@@ -26,6 +27,7 @@ class FormVoter extends AbstractEntityVoter
             self::CREATE,
             self::VIEW,
             self::EDIT,
+            self::DUPLICATE,
             self::DELETE,
         ];
     }
@@ -51,6 +53,11 @@ class FormVoter extends AbstractEntityVoter
     }
 
     protected function canEdit(Form $form, User $loggedIn): bool
+    {
+        return true;
+    }
+
+    protected function canDuplicate(Form $form, User $loggedIn): bool
     {
         return true;
     }

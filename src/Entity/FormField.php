@@ -53,6 +53,19 @@ class FormField
     #[ORM\Column]
     private ?bool $required = true;
 
+    public function __clone()
+    {
+        if ($this->id) {
+            if ($this instanceof Proxy && !$this->__isInitialized()) {
+                // Initialize the proxy to load all properties
+                $this->__load();
+            }
+
+            $this->id = null;
+            $this->form = null;
+        }
+    }
+
     public function __toString(): string
     {
         return (string) $this->label;

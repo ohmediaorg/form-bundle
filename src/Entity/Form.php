@@ -67,6 +67,26 @@ class Form
         $this->fields = new ArrayCollection();
     }
 
+    public function __clone()
+    {
+        if ($this->id) {
+            if ($this instanceof Proxy && !$this->__isInitialized()) {
+                // Initialize the proxy to load all properties
+                $this->__load();
+            }
+
+            $this->id = null;
+            $this->published_at = null;
+
+            $fields = $this->fields;
+            $this->fields = new ArrayCollection();
+
+            foreach ($fields as $field) {
+                $this->addField(clone $field);
+            }
+        }
+    }
+
     public function __toString(): string
     {
         return (string) $this->name;
