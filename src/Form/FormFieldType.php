@@ -94,7 +94,7 @@ class FormFieldType extends AbstractType
 
         $data->add('autocomplete', ChoiceType::class, [
             'label' => 'Browser Hint',
-            'help' => 'Helps the browser know how to autocomplete this field. If you are not sure, select "None".',
+            'help' => 'Helps the browser know how to autocomplete this field in case the label is not descriptive enough. If you are not sure, select "None".',
             'choices' => [
                 'Full Name' => 'name',
                 'First Name' => 'given-name',

@@ -94,12 +94,28 @@ class FormBuilder
     {
         $label = $field->getLabel();
 
+        $data = $field->getData();
+
         $attr = [];
 
         $maxlength = $this->getFieldMaxlength($field);
 
         if ($maxlength) {
             $attr['maxlength'] = $maxlength;
+        }
+
+        $autocomplete = null;
+
+        if ($field->isTypeText()) {
+            $autocomplete = $data['autocomplete'] ?? null;
+        } elseif ($field->isTypeEmail()) {
+            $autocomplete = 'email';
+        } elseif ($field->isTypePhone()) {
+            $autocomplete = 'tel-national';
+        }
+
+        if ($autocomplete) {
+            $attr['autocomplete'] = $autocomplete;
         }
 
         $constraints = $this->getFieldConstraints($field, $maxlength);
@@ -118,8 +134,6 @@ class FormBuilder
         }
 
         if ($field->isTypeChoice()) {
-            $data = $field->getData();
-
             $options['choices'] = array_combine(
                 $data['choices'],
                 $data['choices'],
