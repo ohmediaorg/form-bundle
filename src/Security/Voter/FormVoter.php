@@ -5,6 +5,7 @@ namespace OHMedia\FormBundle\Security\Voter;
 use OHMedia\FormBundle\Entity\Form;
 use OHMedia\SecurityBundle\Entity\User;
 use OHMedia\SecurityBundle\Security\Voter\AbstractEntityVoter;
+use OHMedia\WysiwygBundle\Service\Wysiwyg;
 
 class FormVoter extends AbstractEntityVoter
 {
@@ -13,6 +14,10 @@ class FormVoter extends AbstractEntityVoter
     public const VIEW = 'view';
     public const EDIT = 'edit';
     public const DELETE = 'delete';
+
+    public function __construct(private Wysiwyg $wysiwyg)
+    {
+    }
 
     protected function getAttributes(): array
     {
@@ -52,6 +57,8 @@ class FormVoter extends AbstractEntityVoter
 
     protected function canDelete(Form $form, User $loggedIn): bool
     {
-        return true;
+        $shortcode = sprintf('form_builder(%d)', $form->getId());
+
+        return !$this->wysiwyg->shortcodesInUse($shortcode);
     }
 }
