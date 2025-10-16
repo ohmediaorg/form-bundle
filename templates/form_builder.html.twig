@@ -19,6 +19,10 @@
   <input type="hidden" id="{{ form_id }}_captcha_input" name="{{ form.captcha.vars.full_name }}" />
 
   <div id="{{ form_id }}_error" class="alert alert-danger" style="display:none"></div>
+
+  <div class="mb-3">
+    <button type="submit" id="{{ form_id }}_submit" class="btn-primary btn">Submit</button>
+  </div>
 {{ form_end(form) }}
 
 <script>
@@ -27,6 +31,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   const success = document.getElementById('{{ form_id }}_success');
   const error = document.getElementById('{{ form_id }}_error');
+  const submitButton = document.getElementById('{{ form_id }}_submit');
 
   const captchaContainer = document.getElementById('{{ form_id }}_captcha_container');
   const captchaInput = document.getElementById('{{ form_id }}_captcha_input');
@@ -38,8 +43,6 @@ document.addEventListener('DOMContentLoaded', async function() {
   };
 
   const captcha = await OHMEDIA_ANTISPAM_CAPTCHA_PROMISE(captchaContainer, parameters);
-
-  const submitButton = form.querySelector('[type=submit]');
 
   let submitting = false;
 
