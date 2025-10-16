@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const typeChoice = "{{ constant(form_field_fqns ~ '::TYPE_CHOICE') }}";
   const typeEmail = "{{ constant(form_field_fqns ~ '::TYPE_EMAIL') }}";
   const typePhone = "{{ constant(form_field_fqns ~ '::TYPE_PHONE') }}";
+  const typeText = "{{ constant(form_field_fqns ~ '::TYPE_TEXT') }}";
 
   const type = document.getElementById('{{ form.type.vars.id }}');
 
@@ -23,10 +24,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const reply = form.elements['{{ form.data.reply.vars.full_name }}'];
 
+  const autocomplete = form.elements['{{ form.data.autocomplete.vars.full_name }}'];
+
   function onTypeChange() {
     const isTypeChoice = typeChoice === type.value;
     const isTypeEmail = typeEmail === type.value;
     const isTypePhone = typePhone === type.value;
+    const isTypeText = typeText === type.value;
 
     help.parentNode.style.display = isTypePhone ? 'none' : '';
 
@@ -37,6 +41,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     toggleRadioNodeList(copy, isTypeEmail);
     toggleRadioNodeList(reply, isTypeEmail);
+
+    autocomplete.parentNode.style.display = isTypeText ? '' : 'none';
   }
 
   function toggleRadioNodeList(radioNodeList, show) {

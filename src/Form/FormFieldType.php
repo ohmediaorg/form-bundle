@@ -91,6 +91,22 @@ class FormFieldType extends AbstractType
                 'class' => 'fieldset-nostyle mb-3',
             ],
         ]);
+
+        $data->add('autocomplete', ChoiceType::class, [
+            'label' => 'Browser Hint',
+            'help' => 'Helps the browser know how to autocomplete this field. If you are not sure, select "None".',
+            'choices' => [
+                'Full Name' => 'name',
+                'First Name' => 'given-name',
+                'Last Name' => 'family-name',
+                'Address' => 'address-line1',
+                'City/Town' => 'address-level2',
+                'Province/State' => 'address-level1',
+                'Postal Code/ZIP' => 'postal-code',
+            ],
+            'required' => false,
+            'placeholder' => 'None',
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
