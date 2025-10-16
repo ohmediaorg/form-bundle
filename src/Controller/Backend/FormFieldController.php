@@ -14,7 +14,6 @@ use OHMedia\UtilityBundle\Form\DeleteType;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -94,8 +93,6 @@ class FormFieldController extends AbstractController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $this->preSave($form, $formField);
-
                 $this->formFieldRepository->save($formField, true);
 
                 $this->addFlash('notice', 'The form field was created successfully.');
@@ -131,8 +128,6 @@ class FormFieldController extends AbstractController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $this->preSave($form, $formField);
-
                 $this->formFieldRepository->save($formField, true);
 
                 $this->addFlash('notice', 'The form field was updated successfully.');
@@ -147,27 +142,6 @@ class FormFieldController extends AbstractController
             'form' => $form->createView(),
             'form_field' => $formField,
         ]);
-    }
-
-    private function preSave(FormInterface $form, FormField $formField): void
-    {
-        if ($formField->isTypeChoice()) {
-            $data = [
-                'choices' => $form->get('choices')->getData(),
-                'multiple' => $form->get('multiple')->getData(),
-            ];
-
-            $formField->setData($data);
-        } elseif ($formField->isTypeEmail()) {
-            $data = [
-                'copy' => $form->get('copy')->getData(),
-                'reply' => $form->get('reply')->getData(),
-            ];
-
-            $formField->setData($data);
-        } else {
-            $formField->setData(null);
-        }
     }
 
     #[Route('/form/field/{id}/delete', name: 'form_field_delete', methods: ['GET', 'POST'])]

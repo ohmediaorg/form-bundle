@@ -15,13 +15,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const help = document.getElementById('{{ form.help.vars.id }}');
 
-  const choices = document.getElementById('{{ form.choices.vars.id }}');
+  const choices = document.getElementById('{{ form.data.choices.vars.id }}');
 
-  const multiple = form.elements['{{ form.multiple.vars.full_name }}'];
+  const multiple = form.elements['{{ form.data.multiple.vars.full_name }}'];
 
-  const copy = form.elements['{{ form.copy.vars.full_name }}'];
+  const copy = form.elements['{{ form.data.copy.vars.full_name }}'];
 
-  const reply = form.elements['{{ form.reply.vars.full_name }}'];
+  const reply = form.elements['{{ form.data.reply.vars.full_name }}'];
 
   function onTypeChange() {
     const isTypeChoice = typeChoice === type.value;

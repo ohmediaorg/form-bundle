@@ -6,6 +6,7 @@ use OHMedia\FormBundle\Entity\FormField;
 use OHMedia\UtilityBundle\Form\OnePerLineType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -42,17 +43,21 @@ class FormFieldType extends AbstractType
             'help' => 'Shown below the form field. Use this to provide more instruction that does not fit in the label.',
         ]);
 
-        $data = $formField->getData();
-
-        // TODO: form event to make this field required if type = choice
-        $builder->add('choices', OnePerLineType::class, [
-            'mapped' => false,
-            'data' => $data['choices'] ?? null,
+        $data = $builder->create('data', FormType::class, [
+            'label' => false,
+            'row_attr' => [
+                'class' => 'fieldset-nostyle',
+            ],
         ]);
 
-        $builder->add('multiple', ChoiceType::class, [
+        $builder->add($data);
+
+        $data->add('choices', OnePerLineType::class, [
+            'mapped' => false,
+        ]);
+
+        $data->add('multiple', ChoiceType::class, [
             'label' => 'Allow multiple choices',
-            'mapped' => false,
             'choices' => [
                 'Yes' => true,
                 'No' => false,
@@ -61,12 +66,10 @@ class FormFieldType extends AbstractType
             'row_attr' => [
                 'class' => 'fieldset-nostyle mb-3',
             ],
-            'data' => $data['multiple'] ?? null,
         ]);
 
-        $builder->add('copy', ChoiceType::class, [
+        $data->add('copy', ChoiceType::class, [
             'label' => 'Should a copy of the submission be sent to the email address entered into this field?',
-            'mapped' => false,
             'choices' => [
                 'Yes' => true,
                 'No' => false,
@@ -75,12 +78,10 @@ class FormFieldType extends AbstractType
             'row_attr' => [
                 'class' => 'fieldset-nostyle mb-3',
             ],
-            'data' => $data['copy'] ?? null,
         ]);
 
-        $builder->add('reply', ChoiceType::class, [
+        $data->add('reply', ChoiceType::class, [
             'label' => 'Should the internal email be set to reply to the email address entered into this field?',
-            'mapped' => false,
             'choices' => [
                 'Yes' => true,
                 'No' => false,
@@ -89,7 +90,6 @@ class FormFieldType extends AbstractType
             'row_attr' => [
                 'class' => 'fieldset-nostyle mb-3',
             ],
-            'data' => $data['reply'] ?? null,
         ]);
     }
 
