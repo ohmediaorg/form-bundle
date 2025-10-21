@@ -31,7 +31,7 @@ class Form
 
     #[ORM\Column(type: Types::ARRAY)]
     #[Assert\NotBlank]
-    private array $recipients = [];
+    private ?array $recipients = [];
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
@@ -202,7 +202,7 @@ class Form
         return $this->subject;
     }
 
-    public function setSubject(string $subject): static
+    public function setSubject(?string $subject): static
     {
         $this->subject = $subject;
 
@@ -214,7 +214,7 @@ class Form
         return $this->success_message;
     }
 
-    public function setSuccessMessage(string $success_message): static
+    public function setSuccessMessage(?string $success_message): static
     {
         $this->success_message = $success_message;
 
@@ -226,7 +226,7 @@ class Form
         return $this->email_message;
     }
 
-    public function setEmailMessage(string $email_message): static
+    public function setEmailMessage(?string $email_message): static
     {
         $this->email_message = $email_message;
 
