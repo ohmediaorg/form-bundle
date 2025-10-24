@@ -6,27 +6,32 @@
 
 {% do form.captcha.setRendered %}
 
-{{ form_start(form, {
-  attr: {
-    id: form_id
-  }
-}) }}
+<div id="{{ form_id }}_container">
   {{ wysiwyg(form_entity.description) }}
 
-  {{ form_rest(form) }}
+  {{ form_start(form, {
+    attr: {
+      id: form_id
+    }
+  }) }}
 
-  <div id="{{ form_id }}_captcha_container" class="mb-3"></div>
-  <input type="hidden" id="{{ form_id }}_captcha_input" name="{{ form.captcha.vars.full_name }}" />
+    {{ form_rest(form) }}
 
-  <div id="{{ form_id }}_error" class="alert alert-danger" style="display:none"></div>
+    <div id="{{ form_id }}_captcha_container" class="mb-3"></div>
+    <input type="hidden" id="{{ form_id }}_captcha_input" name="{{ form.captcha.vars.full_name }}" />
 
-  <div class="mb-3">
-    <button type="submit" id="{{ form_id }}_submit" class="btn-primary btn">Submit</button>
-  </div>
-{{ form_end(form) }}
+    <div id="{{ form_id }}_error" class="alert alert-danger" style="display:none"></div>
+
+    <div class="mb-3">
+      <button type="submit" id="{{ form_id }}_submit" class="btn-primary btn">Submit</button>
+    </div>
+  {{ form_end(form) }}
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', async function() {
+  const formContainer = document.getElementById('{{ form_id }}_container');
+
   const form = document.getElementById('{{ form_id }}');
 
   const success = document.getElementById('{{ form_id }}_success');
@@ -71,7 +76,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (r.success) {
           success.style.display = '';
           form.reset();
-          form.style.display = 'none';
+          formContainer.style.display = 'none';
         } else {
           error.innerHTML = r.errors.join('<br>');
           error.style.display = '';
