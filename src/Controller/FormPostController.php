@@ -95,9 +95,9 @@ class FormPostController extends AbstractController
             } elseif (is_array($value)) {
                 $formData[$label] = htmlspecialchars(implode(', ', $value));
             } elseif ($field->isTypeTextarea()) {
-                $formData[$label] = nl2br(htmlspecialchars($value));
+                $formData[$label] = nl2br(htmlspecialchars($value ?? ''));
             } else {
-                $formData[$label] = htmlspecialchars($value);
+                $formData[$label] = htmlspecialchars($value ?? '');
             }
         }
 

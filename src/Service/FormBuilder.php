@@ -130,7 +130,7 @@ class FormBuilder
 
         // OHMedia\UtilityBundle\Form\PhoneType has its own help text
         if (!$field->isTypePhone()) {
-            $options['help'] = nl2br(htmlspecialchars($field->getHelp()));
+            $options['help'] = nl2br(htmlspecialchars($field->getHelp() ?? ''));
             $options['help_html'] = true;
         }
 
