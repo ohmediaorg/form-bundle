@@ -119,6 +119,10 @@ class FormBuilder
             $attr['autocomplete'] = $autocomplete;
         }
 
+        if ($field->isTypeTextarea()) {
+            $attr['rows'] = 5;
+        }
+
         $constraints = $this->getFieldConstraints($field, $maxlength);
 
         $options = [
