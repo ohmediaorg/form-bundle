@@ -20,7 +20,9 @@ class FormEntityType extends AbstractType
 
         $builder->add('name');
 
-        $builder->add('description', WysiwygType::class);
+        $builder->add('description', WysiwygType::class, [
+            'required' => false,
+        ]);
 
         $builder->add('recipients', OneEmailPerLineType::class);
 
