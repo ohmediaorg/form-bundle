@@ -46,6 +46,7 @@ class FormEntityType extends AbstractType
 
         $builder->add('email_message', TextareaType::class, [
             'label' => 'Email Message',
+            'required' => false,
             'help' => 'If an email is sent to the user, this message will be included in that email.',
             'attr' => [
                 'rows' => 5,
