@@ -22,6 +22,7 @@ class FormEntityType extends AbstractType
 
         $builder->add('description', WysiwygType::class, [
             'required' => false,
+            'help' => 'Shown above the form.',
         ]);
 
         $builder->add('recipients', OneEmailPerLineType::class);
