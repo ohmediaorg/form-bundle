@@ -57,8 +57,7 @@ class Form
     #[Assert\Length(max: 255)]
     private ?string $success_message = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Assert\Length(max: 500)]
     private ?string $email_message = null;
 
