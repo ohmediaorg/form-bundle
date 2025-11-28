@@ -14,7 +14,7 @@ class FormNavItemProvider extends AbstractNavItemProvider
     {
         if ($this->isGranted(FormVoter::INDEX, new Form())) {
             return (new NavLink('Forms', 'form_index'))
-                ->setIcon('ui-checks-grid');
+                ->setIcon('ui-checks');
         }
 
         return null;
