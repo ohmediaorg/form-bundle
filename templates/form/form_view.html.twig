@@ -14,34 +14,32 @@
 {% set create_form_field_href = path('form_field_create', {id: form_entity.id}) %}
 
 {% block actions %}
-  <div class="btn-group btn-group-sm">
-    {% if can_create_form_field %}
-      <a href="{{ create_form_field_href }}" class="btn btn-sm btn-primary">
-        {{ bootstrap_icon('plus-lg') }} Add Form Field
-      </a>
-    {% endif %}
+  {% if can_create_form_field %}
+    <a href="{{ create_form_field_href }}" class="btn btn-primary">
+      {{ bootstrap_icon('plus-lg') }} Add Form Field
+    </a>
+  {% endif %}
 
-    {% if is_granted(attributes.form.edit, form_entity) %}
-      <a class="btn btn-primary" href="{{ path('form_edit', {id: form_entity.id}) }}">
-        {{ bootstrap_icon('pencil') }}
-        Edit
-      </a>
-    {% endif %}
+  {% if is_granted(attributes.form.edit, form_entity) %}
+    <a class="btn btn-secondary" href="{{ path('form_edit', {id: form_entity.id}) }}">
+      {{ bootstrap_icon('pencil') }}
+      Edit Form
+    </a>
+  {% endif %}
 
-    {% if is_granted(attributes.form.duplicate, form_entity) %}
-      <a class="btn btn-primary" href="{{ path('form_duplicate', {id: form_entity.id}) }}">
-        {{ bootstrap_icon('copy') }}
-        Duplicate
-      </a>
-    {% endif %}
+  {% if is_granted(attributes.form.duplicate, form_entity) %}
+    <a class="btn btn-secondary" href="{{ path('form_duplicate', {id: form_entity.id}) }}">
+      {{ bootstrap_icon('copy') }}
+      Duplicate Form
+    </a>
+  {% endif %}
 
-    {% if is_granted(attributes.form.delete, form_entity) %}
-      <a class="btn btn-danger" href="{{ path('form_delete', {id: form_entity.id}) }}" data-confirm="Are you sure you want to delete this form? Clicking OK will take you to a verification step to delete this entry.">
-        {{ bootstrap_icon('trash') }}
-        Delete
-      </a>
-    {% endif %}
-  </div>
+  {% if is_granted(attributes.form.delete, form_entity) %}
+    <a class="btn btn-danger" href="{{ path('form_delete', {id: form_entity.id}) }}" data-confirm="Are you sure you want to delete this form? Clicking OK will take you to a verification step to delete this entry.">
+      {{ bootstrap_icon('trash') }}
+      Delete Form
+    </a>
+  {% endif %}
 {% endblock %}
 
 {% set form_field_count = form_entity.fields|length %}
@@ -75,40 +73,8 @@
             data-sortable-csrf-token="{{ csrf_token(csrf_token_name) }}"
             data-sortable-url="{{ path('form_field_reorder_post', {id: form_entity.id}) }}"
           >
-          {% for form_field in form_entity.fields %}
-            <tr data-id="{{ form_field.id }}">
-              <td data-handle>{{ bootstrap_icon('arrows-move') }}</td>
-              <td>
-                {{ form_field }}
-                {% if form_field.help %}
-                  <small class="d-block text-muted">{{ form_field.help }}</small>
-                {% endif %}
-              </td>
-              <td>
-                {% if form_field.required %}
-                  <span class="badge text-bg-success">Yes</span>
-                {% else %}
-                  <span class="badge text-bg-secondary">No</span>
-                {% endif %}
-              </td>
-              <td>{{ form_field.typeReadable }}</td>
-              <td>{{ form_field.updatedAt|datetime }}</td>
-              <td>
-                {% if is_granted(attributes.form_field.edit, form_field) %}
-                  <a class="btn btn-sm btn-primary btn-action" href="{{ path('form_field_edit', {id: form_field.id}) }}" title="Edit">
-                    {{ bootstrap_icon('pencil') }}
-                    <span class="visually-hidden">Edit</span>
-                  </a>
-                {% endif %}
-
-                {% if is_granted(attributes.form_field.delete, form_field) %}
-                  <a class="btn btn-sm btn-danger btn-action" href="{{ path('form_field_delete', {id: form_field.id}) }}" title="Delete" data-confirm="Are you sure you want to delete this form field? Clicking OK will take you to a verification step to delete this entry.">
-                    {{ bootstrap_icon('trash') }}
-                    <span class="visually-hidden">Delete</span>
-                  </a>
-                {% endif %}
-              </td>
-            </tr>
+            {% for form_field in form_entity.fields %}
+              {{ _self.table_row(form_field, attributes) }}
             {% endfor %}
           </tbody>
         </table>
@@ -125,3 +91,51 @@
     </div>
   </div>
 {% endblock %}
+
+{% macro table_row(form_field, attributes) %}
+  {% set row_actions = [] %}
+
+  {% if is_granted(attributes.form_field.edit, form_field) %}
+    {% set row_actions = row_actions|merge([{
+      route: 'form_field_edit',
+      route_params: {id: form_field.id},
+      color: 'secondary',
+      icon: 'pen',
+      text: 'Edit Form Field',
+    }]) %}
+  {% endif %}
+  {% if is_granted(attributes.form_field.delete, form_field) %}
+    {% set row_actions = row_actions|merge([{
+      route: 'form_field_delete',
+      route_params: {id: form_field.id},
+      color: 'danger',
+      icon: 'trash',
+      text: 'Delete Form Field',
+      confirm: 'Are you sure you want to delete this form field? Clicking OK will take you to a verification step to delete this entry.',
+    }]) %}
+  {% endif %}
+
+  <tr data-id="{{ form_field.id }}">
+    <td data-handle>{{ bootstrap_icon('arrows-move') }}</td>
+    <td>
+      {{ form_field }}
+      {% if form_field.help %}
+        <small class="d-block text-muted">{{ form_field.help }}</small>
+      {% endif %}
+    </td>
+    <td>
+      {% if form_field.required %}
+        <span class="badge text-bg-success">Yes</span>
+      {% else %}
+        <span class="badge text-bg-secondary">No</span>
+      {% endif %}
+    </td>
+    <td>{{ form_field.typeReadable }}</td>
+    <td>{{ form_field.updatedAt|datetime }}</td>
+    <td>
+      {% include '@OHMediaBackend/widget/row_actions.html.twig' with {
+        row_actions: row_actions,
+      } only %}
+    </td>
+  </tr>
+{% endmacro %}
