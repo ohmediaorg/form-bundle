@@ -104,6 +104,7 @@
       text: 'Edit Form Field',
     }]) %}
   {% endif %}
+
   {% if is_granted(attributes.form_field.delete, form_field) %}
     {% set row_actions = row_actions|merge([{
       route: 'form_field_delete',
