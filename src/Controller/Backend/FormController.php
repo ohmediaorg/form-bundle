@@ -3,6 +3,7 @@
 namespace OHMedia\FormBundle\Controller\Backend;
 
 use Doctrine\ORM\QueryBuilder;
+use OHMedia\BackendBundle\Form\MultiSaveType;
 use OHMedia\BackendBundle\Routing\Attribute\Admin;
 use OHMedia\BootstrapBundle\Service\Paginator;
 use OHMedia\FormBundle\Entity\Form;
@@ -146,7 +147,7 @@ class FormController extends AbstractController
 
         $form = $this->createForm(FormEntityType::class, $formEntity);
 
-        $form->add('save', SubmitType::class);
+        $form->add('save', MultiSaveType::class);
 
         $form->handleRequest($request);
 
@@ -156,9 +157,7 @@ class FormController extends AbstractController
 
                 $this->addFlash('notice', 'The form was created successfully.');
 
-                return $this->redirectToRoute('form_view', [
-                    'id' => $formEntity->getId(),
-                ]);
+                return $this->redirectForm($formEntity, $form);
             }
 
             $this->addFlash('error', 'There are some errors in the form below.');
@@ -201,7 +200,7 @@ class FormController extends AbstractController
 
         $form = $this->createForm(FormEntityType::class, $formEntity);
 
-        $form->add('save', SubmitType::class);
+        $form->add('save', MultiSaveType::class);
 
         $form->handleRequest($request);
 
@@ -211,9 +210,7 @@ class FormController extends AbstractController
 
                 $this->addFlash('notice', 'The form was updated successfully.');
 
-                return $this->redirectToRoute('form_view', [
-                    'id' => $formEntity->getId(),
-                ]);
+                return $this->redirectForm($formEntity, $form);
             }
 
             $this->addFlash('error', 'There are some errors in the form below.');
@@ -240,7 +237,9 @@ class FormController extends AbstractController
 
         $form = $this->createForm(FormEntityType::class, $newFormEntity);
 
-        $form->add('save', SubmitType::class);
+        $form->add('save', MultiSaveType::class, [
+            'add_another' => false,
+        ]);
 
         $form->handleRequest($request);
 
@@ -250,9 +249,7 @@ class FormController extends AbstractController
 
                 $this->addFlash('notice', 'The form was duplicated successfully.');
 
-                return $this->redirectToRoute('form_view', [
-                    'id' => $newFormEntity->getId(),
-                ]);
+                return $this->redirectForm($formEntity, $form);
             }
 
             $this->addFlash('error', 'There are some errors in the form below.');
@@ -263,6 +260,23 @@ class FormController extends AbstractController
             'existing_form_entity' => $existingFormEntity,
             'form_entity' => $newFormEntity,
         ]);
+    }
+
+    private function redirectForm(Form $formEntity, FormInterface $form): Response
+    {
+        $clickedButtonName = $form->getClickedButton()->getName() ?? null;
+
+        if ('keep_editing' === $clickedButtonName) {
+            return $this->redirectToRoute('form_edit', [
+                'id' => $formEntity->getId(),
+            ]);
+        } elseif ('add_another' === $clickedButtonName) {
+            return $this->redirectToRoute('form_create');
+        } else {
+            return $this->redirectToRoute('form_view', [
+                'id' => $formEntity->getId(),
+            ]);
+        }
     }
 
     #[Route('/form/{id}/delete', name: 'form_delete', methods: ['GET', 'POST'])]
