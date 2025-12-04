@@ -14,8 +14,9 @@
 
 {% block actions %}
   {% if can_create_form %}
-    <a href="{{ create_form_href }}" class="btn btn-sm btn-primary">
-      {{ bootstrap_icon('plus-lg') }} Add Form
+    <a href="{{ create_form_href }}" class="btn btn-primary">
+      {{ bootstrap_icon('plus-lg') }}
+      Add Form
     </a>
   {% endif %}
 {% endblock %}
