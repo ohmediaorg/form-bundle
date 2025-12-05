@@ -249,7 +249,7 @@ class FormController extends AbstractController
 
                 $this->addFlash('notice', 'The form was duplicated successfully.');
 
-                return $this->redirectForm($formEntity, $form);
+                return $this->redirectForm($newFormEntity, $form);
             }
 
             $this->addFlash('error', 'There are some errors in the form below.');
