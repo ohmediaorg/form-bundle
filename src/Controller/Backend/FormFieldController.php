@@ -3,6 +3,7 @@
 namespace OHMedia\FormBundle\Controller\Backend;
 
 use Doctrine\DBAL\Connection;
+use OHMedia\BackendBundle\Form\MultiSaveType;
 use OHMedia\BackendBundle\Routing\Attribute\Admin;
 use OHMedia\FormBundle\Entity\Form;
 use OHMedia\FormBundle\Entity\FormField;
@@ -14,6 +15,7 @@ use OHMedia\UtilityBundle\Form\DeleteType;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -87,7 +89,7 @@ class FormFieldController extends AbstractController
 
         $form = $this->createForm(FormFieldType::class, $formField);
 
-        $form->add('save', SubmitType::class);
+        $form->add('save', MultiSaveType::class);
 
         $form->handleRequest($request);
 
@@ -97,7 +99,7 @@ class FormFieldController extends AbstractController
 
                 $this->addFlash('notice', 'The form field was created successfully.');
 
-                return $this->redirectToForm($formField);
+                return $this->redirectForm($formField, $form);
             }
 
             $this->addFlash('error', 'There are some errors in the form below.');
@@ -122,7 +124,7 @@ class FormFieldController extends AbstractController
 
         $form = $this->createForm(FormFieldType::class, $formField);
 
-        $form->add('save', SubmitType::class);
+        $form->add('save', MultiSaveType::class);
 
         $form->handleRequest($request);
 
@@ -132,7 +134,7 @@ class FormFieldController extends AbstractController
 
                 $this->addFlash('notice', 'The form field was updated successfully.');
 
-                return $this->redirectToForm($formField);
+                return $this->redirectForm($formField, $form);
             }
 
             $this->addFlash('error', 'There are some errors in the form below.');
@@ -142,6 +144,25 @@ class FormFieldController extends AbstractController
             'form' => $form->createView(),
             'form_field' => $formField,
         ]);
+    }
+
+    private function redirectForm(FormField $formField, FormInterface $form): Response
+    {
+        $clickedButtonName = $form->getClickedButton()->getName() ?? null;
+
+        if ('keep_editing' === $clickedButtonName) {
+            return $this->redirectToRoute('form_field_edit', [
+                'id' => $formField->getId(),
+            ]);
+        } elseif ('add_another' === $clickedButtonName) {
+            return $this->redirectToRoute('form_field_create', [
+                'id' => $formField->getForm()->getId(),
+            ]);
+        } else {
+            return $this->redirectToRoute('form_view', [
+                'id' => $formField->getForm()->getId(),
+            ]);
+        }
     }
 
     #[Route('/form/field/{id}/delete', name: 'form_field_delete', methods: ['GET', 'POST'])]
@@ -167,7 +188,9 @@ class FormFieldController extends AbstractController
 
                 $this->addFlash('notice', 'The form field was deleted successfully.');
 
-                return $this->redirectToForm($formField);
+                return $this->redirectToRoute('form_view', [
+                    'id' => $formField->getForm()->getId(),
+                ]);
             }
 
             $this->addFlash('error', 'There are some errors in the form below.');
@@ -176,13 +199,6 @@ class FormFieldController extends AbstractController
         return $this->render('@OHMediaForm/form_field/form_field_delete.html.twig', [
             'form' => $form->createView(),
             'form_field' => $formField,
-        ]);
-    }
-
-    private function redirectToForm(FormField $formField): Response
-    {
-        return $this->redirectToRoute('form_view', [
-            'id' => $formField->getForm()->getId(),
         ]);
     }
 
