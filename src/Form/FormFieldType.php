@@ -81,7 +81,7 @@ class FormFieldType extends AbstractType
         ]);
 
         $data->add('reply', ChoiceType::class, [
-            'label' => 'Should the internal email be set to reply to the email address entered into this field?',
+            'label' => 'Should the reply-to for internal emails be set to the email address entered into this field?',
             'choices' => [
                 'Yes' => true,
                 'No' => false,
