@@ -146,7 +146,7 @@ class FormBuilder
 
             $options['multiple'] = $data['multiple'];
 
-            $options['expanded'] = count($data['choices']) < 5;
+            $options['expanded'] = true;
         } elseif ($field->isTypeDate()) {
             $options['widget'] = 'single_text';
         } elseif ($field->isTypeNumber()) {
