@@ -52,9 +52,7 @@ class FormFieldType extends AbstractType
 
         $builder->add($data);
 
-        $data->add('choices', OnePerLineType::class, [
-            'mapped' => false,
-        ]);
+        $data->add('choices', OnePerLineType::class);
 
         $data->add('multiple', ChoiceType::class, [
             'label' => 'Allow multiple choices',
