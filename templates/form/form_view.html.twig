@@ -119,16 +119,22 @@
   <tr data-id="{{ form_field.id }}">
     <td data-handle>{{ bootstrap_icon('arrows-move') }}</td>
     <td>
-      {{ form_field }}
-      {% if form_field.help %}
-        <small class="d-block text-muted">{{ form_field.help }}</small>
+      {% if form_field.isTypeHeading %}
+        <b>{{ form_field }}</b>
+      {% else %}
+        {{ form_field }}
+        {% if form_field.help %}
+          <small class="d-block text-muted">{{ form_field.help }}</small>
+        {% endif %}
       {% endif %}
     </td>
     <td>
-      {% if form_field.required %}
-        <span class="badge text-bg-success">Yes</span>
-      {% else %}
-        <span class="badge text-bg-secondary">No</span>
+      {% if not form_field.isTypeHeading %}
+        {% if form_field.required %}
+          <span class="badge text-bg-success">Yes</span>
+        {% else %}
+          <span class="badge text-bg-secondary">No</span>
+        {% endif %}
       {% endif %}
     </td>
     <td>{{ form_field.typeReadable }}</td>

@@ -15,6 +15,14 @@
     }
   }) }}
 
+    {% for field in form_entity.fields %}
+      {% if field.isTypeHeading %}
+        <h3>{{ field.label }}</h3>
+      {% else %}
+        {{ form_row(form[field.name]) }}
+      {% endif %}
+    {% endfor %}
+
     {{ form_rest(form) }}
 
     <div id="{{ form_id }}_captcha_container" class="mb-3"></div>

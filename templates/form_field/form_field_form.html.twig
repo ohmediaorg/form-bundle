@@ -9,10 +9,13 @@ document.addEventListener('DOMContentLoaded', function() {
   const typeEmail = "{{ constant(form_field_fqns ~ '::TYPE_EMAIL') }}";
   const typePhone = "{{ constant(form_field_fqns ~ '::TYPE_PHONE') }}";
   const typeText = "{{ constant(form_field_fqns ~ '::TYPE_TEXT') }}";
+  const typeHeading = "{{ constant(form_field_fqns ~ '::TYPE_HEADING') }}";
 
   const type = document.getElementById('{{ form.type.vars.id }}');
 
   const form = type.form;
+
+  const required = form.elements['{{ form.required.vars.full_name }}'];
 
   const help = document.getElementById('{{ form.help.vars.id }}');
 
@@ -31,11 +34,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const isTypeEmail = typeEmail === type.value;
     const isTypePhone = typePhone === type.value;
     const isTypeText = typeText === type.value;
+    const isTypeHeading = typeHeading === type.value;
 
-    help.parentNode.style.display = isTypePhone ? 'none' : '';
+    help.parentNode.style.display = isTypePhone || isTypeHeading ? 'none' : '';
 
     choices.parentNode.style.display = isTypeChoice ? '' : 'none';
     choices.required = isTypeChoice;
+
+    toggleRadioNodeList(required, !isTypeHeading);
 
     toggleRadioNodeList(multiple, isTypeChoice);
 

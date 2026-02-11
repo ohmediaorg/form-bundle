@@ -18,6 +18,10 @@ class FormFieldType extends AbstractType
     {
         $formField = $options['data'];
 
+        $builder->add('type', ChoiceType::class, [
+            'choices' => FormField::getTypeChoices(),
+        ]);
+
         $builder->add('label', TextType::class, [
             'help' => 'Keep this as short and descriptive as possible.',
         ]);
@@ -31,10 +35,6 @@ class FormFieldType extends AbstractType
             'row_attr' => [
                 'class' => 'fieldset-nostyle mb-3',
             ],
-        ]);
-
-        $builder->add('type', ChoiceType::class, [
-            'choices' => FormField::getTypeChoices(),
         ]);
 
         $builder->add('help', TextareaType::class, [
