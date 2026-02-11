@@ -7,7 +7,11 @@
 {% do form.captcha.setRendered %}
 
 <div id="{{ form_id }}_container">
-  {{ wysiwyg(form_entity.description) }}
+  {% if form_entity.description %}
+    <div class="mb-3">
+      {{ wysiwyg(form_entity.description) }}
+    </div>
+  {% endif %}
 
   {{ form_start(form, {
     attr: {
