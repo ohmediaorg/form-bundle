@@ -22,6 +22,9 @@
     {% for field in form_entity.fields %}
       {% if field.isTypeHeading %}
         <h3>{{ field.label }}</h3>
+        {% if field.help %}
+          <p>{{ field.help }}</p>
+        {% endif %}
       {% else %}
         {{ form_row(form[field.name]) }}
       {% endif %}

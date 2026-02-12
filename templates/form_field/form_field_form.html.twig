@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const isTypeText = typeText === type.value;
     const isTypeHeading = typeHeading === type.value;
 
-    help.parentNode.style.display = isTypePhone || isTypeHeading ? 'none' : '';
+    help.parentNode.style.display = isTypePhone ? 'none' : '';
 
     choices.parentNode.style.display = isTypeChoice ? '' : 'none';
     choices.required = isTypeChoice;
