@@ -17,6 +17,7 @@ class FormField
     public const TYPE_CHOICE = 'choice';
     public const TYPE_DATE = 'date';
     public const TYPE_EMAIL = 'email';
+    public const TYPE_HEADING = 'heading';
     public const TYPE_NUMBER = 'number';
     public const TYPE_PHONE = 'phone';
     public const TYPE_TEXT = 'text';
@@ -129,6 +130,7 @@ class FormField
             'Choice' => self::TYPE_CHOICE,
             'Date' => self::TYPE_DATE,
             'Number' => self::TYPE_NUMBER,
+            'Heading' => self::TYPE_HEADING,
         ];
     }
 
@@ -177,6 +179,11 @@ class FormField
     public function isTypeChoice(): bool
     {
         return $this->isType(self::TYPE_CHOICE);
+    }
+
+    public function isTypeHeading(): bool
+    {
+        return $this->isType(self::TYPE_HEADING);
     }
 
     public function getHelp(): ?string

@@ -72,6 +72,10 @@ class FormBuilder
         FormBuilderInterface $builder,
         FormField $field,
     ): void {
+        if ($field->isTypeHeading()) {
+            return;
+        }
+
         if ($field->isTypeChoice()) {
             $type = ChoiceType::class;
         } elseif ($field->isTypeDate()) {

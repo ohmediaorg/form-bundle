@@ -61,7 +61,6 @@
             <tr>
               <th style="width:1rem" aria-label="Reorder Rows"></th>
               <th style="max-width:300px">Label</th>
-              <th>Required</th>
               <th>Type</th>
               <th>Last Updated</th>
               <th aria-label="Row Actions"></th>
@@ -119,19 +118,24 @@
   <tr data-id="{{ form_field.id }}">
     <td data-handle>{{ bootstrap_icon('arrows-move') }}</td>
     <td>
-      {{ form_field }}
+      {% if form_field.isTypeHeading %}
+        <b>{{ form_field }}</b>
+      {% else %}
+        {{ form_field }}
+      {% endif %}
+
       {% if form_field.help %}
         <small class="d-block text-muted">{{ form_field.help }}</small>
       {% endif %}
     </td>
     <td>
-      {% if form_field.required %}
-        <span class="badge text-bg-success">Yes</span>
-      {% else %}
-        <span class="badge text-bg-secondary">No</span>
+      {{ form_field.typeReadable }}
+
+      {% if not form_field.isTypeHeading and form_field.required %}
+        <br>
+        <span class="badge text-bg-dark">Required</span>
       {% endif %}
     </td>
-    <td>{{ form_field.typeReadable }}</td>
     <td>{{ form_field.updatedAt|datetime }}</td>
     <td>
       {% include '@OHMediaBackend/widget/row_actions.html.twig' with {

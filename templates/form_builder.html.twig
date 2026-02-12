@@ -6,14 +6,29 @@
 
 {% do form.captcha.setRendered %}
 
-<div id="{{ form_id }}_container">
-  {{ wysiwyg(form_entity.description) }}
+<div id="{{ form_id }}_container" class="form-builder">
+  {% if form_entity.description %}
+    <div class="form-description">
+      {{ wysiwyg(form_entity.description) }}
+    </div>
+  {% endif %}
 
   {{ form_start(form, {
     attr: {
       id: form_id
     }
   }) }}
+
+    {% for field in form_entity.fields %}
+      {% if field.isTypeHeading %}
+        <h3 class="form-heading">{{ field.label }}</h3>
+        {% if field.help %}
+          <p class="form-heading-help">{{ field.help }}</p>
+        {% endif %}
+      {% else %}
+        {{ form_row(form[field.name]) }}
+      {% endif %}
+    {% endfor %}
 
     {{ form_rest(form) }}
 

@@ -7,8 +7,12 @@
 
   <p>Here is a copy of your submission:</p>
 
-  {% for label, value in form_data %}
-    <p><b>{{ label }}:</b> {{ value|raw }}</p>
+  {% for field in form_entity.fields %}
+    {% if field.isTypeHeading %}
+      <h3>{{ field.label }}</h3>
+    {% else %}
+      <p><b>{{ field.label }}:</b> {{ form_data[field.id]|raw }}</p>
+    {% endif %}
   {% endfor %}
 
   {% if form_entity.agreementText %}

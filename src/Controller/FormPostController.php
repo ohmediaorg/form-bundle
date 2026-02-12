@@ -87,18 +87,23 @@ class FormPostController extends AbstractController
         $formData = [];
 
         foreach ($formEntity->getFields() as $field) {
-            $label = $field->getLabel();
+            if ($field->isTypeHeading()) {
+                continue;
+            }
+
             $value = $form->get($field->getName())->getData();
 
             if ($value instanceof \DateTimeInterface) {
-                $formData[$label] = $value->format('M j, Y');
+                $data = $value->format('M j, Y');
             } elseif (is_array($value)) {
-                $formData[$label] = htmlspecialchars(implode(', ', $value));
+                $data = htmlspecialchars(implode(', ', $value));
             } elseif ($field->isTypeTextarea()) {
-                $formData[$label] = nl2br(htmlspecialchars($value ?? ''));
+                $data = nl2br(htmlspecialchars($value ?? ''));
             } else {
-                $formData[$label] = htmlspecialchars($value ?? '');
+                $data = htmlspecialchars($value ?? '');
             }
+
+            $formData[$field->getId()] = $data;
         }
 
         $subject = $formEntity->getSubject();
