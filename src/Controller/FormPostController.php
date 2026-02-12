@@ -91,7 +91,6 @@ class FormPostController extends AbstractController
                 continue;
             }
 
-            $label = $field->getLabel();
             $value = $form->get($field->getName())->getData();
 
             if ($value instanceof \DateTimeInterface) {
