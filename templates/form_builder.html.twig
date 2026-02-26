@@ -92,6 +92,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           success.style.display = '';
           form.reset();
           formContainer.style.display = 'none';
+          success.scrollIntoView();
         } else {
           error.innerHTML = r.errors.join('<br>');
           error.style.display = '';
