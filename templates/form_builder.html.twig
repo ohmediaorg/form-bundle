@@ -32,12 +32,12 @@
 
     {{ form_rest(form) }}
 
-    <div id="{{ form_id }}_captcha_container" class="mb-3"></div>
+    <div id="{{ form_id }}_captcha_container" class="form-group"></div>
     <input type="hidden" id="{{ form_id }}_captcha_input" name="{{ form.captcha.vars.full_name }}" />
 
     <div id="{{ form_id }}_error" class="alert alert-danger" style="display:none"></div>
 
-    <div class="mb-3">
+    <div class="form-group">
       <button type="submit" id="{{ form_id }}_submit" class="btn-primary btn">Submit</button>
     </div>
   {{ form_end(form) }}
