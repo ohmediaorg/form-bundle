@@ -61,9 +61,9 @@ class FormBuilder
             'label' => nl2br(htmlspecialchars($label)),
             'label_html' => true,
             'constraints' => [
-                new Assert\IsTrue([
-                    'message' => "You must agree to \"$truncated\".",
-                ]),
+                new Assert\IsTrue(
+                    message: "You must agree to \"$truncated\".",
+                ),
             ],
         ]);
     }
@@ -174,41 +174,38 @@ class FormBuilder
         // requires a string value to compare
         if ($isString) {
             $constraints[] = new Assert\NoSuspiciousCharacters(
-                null,
-                "\"$label\" contains characters that are not allowed by the current restriction-level.",
-                "\"$label\" contains invisible characters which is not allowed.",
-                "\"$label\" is mixing numbers from different scripts which is not allowed.",
-                "\"$label\" contains hidden overlay characters which is not allowed.",
+                restrictionLevelMessage: "\"$label\" contains characters that are not allowed by the current restriction-level.",
+                invisibleMessage: "\"$label\" contains invisible characters which is not allowed.",
+                mixedNumbersMessage: "\"$label\" is mixing numbers from different scripts which is not allowed.",
+                hiddenOverlayMessage: "\"$label\" contains hidden overlay characters which is not allowed.",
             );
 
             $constraints[] = new NoForeignCharacters(
-                "\"$label\" contains foreign characters that are not allowed.",
+                message: "\"$label\" contains foreign characters that are not allowed.",
             );
         }
 
         if ($field->isRequired()) {
-            $constraints[] = new Assert\NotBlank([
-                'message' => "\"$label\" should not be blank.",
-            ]);
+            $constraints[] = new Assert\NotBlank(
+                message: "\"$label\" should not be blank.",
+            );
         }
 
         if ($field->isTypePhone()) {
             $constraints[] = new Phone(
-                null,
-                "\"$label\" does not match the suggested format.",
+                message: "\"$label\" does not match the suggested format.",
             );
         } elseif ($field->isTypeEmail()) {
             $constraints[] = new Assert\Email(
-                null,
-                "\"$label\" is not a valid email address.",
+                message: "\"$label\" is not a valid email address.",
             );
         }
 
         if ($maxlength) {
-            $constraints[] = new Assert\Length([
-                'max' => $maxlength,
-                'maxMessage' => "\"$label\" should be {{ limit }} characters or less.",
-            ]);
+            $constraints[] = new Assert\Length(
+                max: $maxlength,
+                maxMessage: "\"$label\" should be {{ limit }} characters or less.",
+            );
         }
 
         return $constraints;
