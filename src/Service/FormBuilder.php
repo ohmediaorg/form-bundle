@@ -3,7 +3,7 @@
 namespace OHMedia\FormBundle\Service;
 
 use OHMedia\AntispamBundle\Form\Type\CaptchaType;
-use OHMedia\AntispamBundle\Validator\Constraints\NoForeignCharacters;
+use OHMedia\AntispamBundle\Validator\Constraints\NoInvalidCharacters;
 use OHMedia\FormBundle\Entity\Form;
 use OHMedia\FormBundle\Entity\FormField;
 use OHMedia\UtilityBundle\Form\PhoneType;
@@ -173,16 +173,7 @@ class FormBuilder
 
         // requires a string value to compare
         if ($isString) {
-            $constraints[] = new Assert\NoSuspiciousCharacters(
-                restrictionLevelMessage: "\"$label\" contains characters that are not allowed by the current restriction-level.",
-                invisibleMessage: "\"$label\" contains invisible characters which is not allowed.",
-                mixedNumbersMessage: "\"$label\" is mixing numbers from different scripts which is not allowed.",
-                hiddenOverlayMessage: "\"$label\" contains hidden overlay characters which is not allowed.",
-            );
-
-            $constraints[] = new NoForeignCharacters(
-                message: "\"$label\" contains foreign characters that are not allowed.",
-            );
+            $constraints[] = new NoInvalidCharacters($label);
         }
 
         if ($field->isRequired()) {
