@@ -173,7 +173,7 @@ class FormBuilder
 
         // requires a string value to compare
         if ($isString) {
-            $constraints[] = new NoInvalidCharacters($label);
+            $constraints[] = new NoInvalidCharacters('"'.$label.'"');
         }
 
         if ($field->isRequired()) {
