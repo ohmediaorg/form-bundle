@@ -19,16 +19,32 @@
     }
   }) }}
 
+    {% set form_heading_open = false %}
+
     {% for field in form_entity.fields %}
       {% if field.isTypeHeading %}
-        <h3 class="form-heading">{{ field.label }}</h3>
-        {% if field.help %}
-          <p class="form-heading-help">{{ field.help }}</p>
+        {% if form_heading_open %}
+          </div></fieldset>
         {% endif %}
+
+        {% set form_heading_open = true %}
+
+        <fieldset class="form-section">
+          <legend class="form-section__info">
+            <h3 class="form-section__title">{{ field.label }}</h3>
+            {% if field.help %}
+              <span class="form-section__description">{{ field.help }}</span>
+            {% endif %}
+          </legend>
+          <div class="form-section__fields">
       {% else %}
         {{ form_row(form[field.name]) }}
       {% endif %}
     {% endfor %}
+
+    {% if form_heading_open %}
+      </div></fieldset>
+    {% endif %}
 
     {{ form_rest(form) }}
 
