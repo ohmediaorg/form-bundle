@@ -1,0 +1,10 @@
+{% for field in form_entity.fields %}
+  {% if field.isTypeHeading %}
+    <h3 class="form-heading">{{ field.label }}</h3>
+    {% if field.help %}
+      <p class="form-heading-help">{{ field.help }}</p>
+    {% endif %}
+  {% else %}
+    {{ form_row(form[field.name]) }}
+  {% endif %}
+{% endfor %}
