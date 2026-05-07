@@ -4,6 +4,7 @@ namespace OHMedia\FormBundle\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Persistence\Proxy;
 use OHMedia\FormBundle\Repository\FormFieldRepository;
 use OHMedia\UtilityBundle\Entity\BlameableEntityTrait;
 use Symfony\Component\String\Slugger\AsciiSlugger;
