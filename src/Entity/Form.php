@@ -30,7 +30,7 @@ class Form
     #[Assert\Length(max: 50)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::ARRAY)]
+    #[ORM\Column]
     #[Assert\NotBlank]
     private ?array $recipients = [];
 
