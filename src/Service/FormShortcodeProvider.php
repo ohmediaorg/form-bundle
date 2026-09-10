@@ -20,7 +20,7 @@ class FormShortcodeProvider extends AbstractShortcodeProvider
     public function buildShortcodes(): void
     {
         $forms = $this->formRepository->createQueryBuilder('f')
-            ->orderBy('f.name', 'asc')
+            ->orderBy('f.name', \SortDirection::Ascending)
             ->getQuery()
             ->getResult();
 

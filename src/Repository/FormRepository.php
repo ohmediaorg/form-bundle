@@ -46,7 +46,7 @@ class FormRepository extends ServiceEntityRepository implements WysiwygRepositor
             ->andWhere($alias.'.published_at IS NOT NULL')
             ->andWhere($alias.'.published_at <= :now')
             ->setParameter('now', DateTimeUtil::getDateTimeUtc())
-            ->orderBy($alias.'.published_at', 'DESC');
+            ->orderBy($alias.'.published_at', \SortDirection::Descending);
     }
 
     public function getShortcodeQueryBuilder(string $shortcode): QueryBuilder

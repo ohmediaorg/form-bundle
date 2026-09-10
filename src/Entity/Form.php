@@ -45,7 +45,7 @@ class Form
      * @var Collection<int, FormField>
      */
     #[ORM\OneToMany(targetEntity: FormField::class, mappedBy: 'form', cascade: ['persist', 'remove'])]
-    #[ORM\OrderBy(['ordinal' => 'ASC'])]
+    #[ORM\OrderBy(['ordinal' => \SortDirection::Ascending])]
     private Collection $fields;
 
     #[ORM\Column(length: 50)]
